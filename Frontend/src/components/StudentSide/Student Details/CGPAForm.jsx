@@ -134,13 +134,13 @@ const CGPAForm = ({ addSemesterDetails }) => {
       <button type="submit" className="bg-blue-500 text-white py-2 px-4 rounded">
         Add Details
       </button>
-      <button
+      {/* <button
         type="button"
         onClick={handleBack}
         className="ml-4 bg-gray-500 text-white py-2 px-4 rounded"
       >
         Back
-      </button>
+      </button> */}
     </form>
   );
 };

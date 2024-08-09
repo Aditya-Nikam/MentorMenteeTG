@@ -73,20 +73,18 @@ const PersonalD = () => {
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-200">
-      <div className="bg-white border border-blue-700 rounded-md p-8 shadow-lg w-full max-w-md">
-        <h1 className="text-4xl font-bold text-center mb-8 text-purple-900">
-          Personal Details
-        </h1>
+      <div className="bg-white border rounded-md p-8 shadow-lg w-full max-w-md">
+        <h1 className="text-2xl font-semibold mb-4">Personal Details</h1>
         <form onSubmit={handlegonext}>
           <div className="my-4">
-            <label htmlFor="name" className="block text-sm text-black-500 mb-1">
+            <label htmlFor="name" className="block text-sm font-medium text-gray-700">
               Name
             </label>
             <input
               type="text"
               id="name"
               name="name"
-              className="block w-full py-2 px-3 text-sm border border-blue-500 rounded-md focus:border-black"
+              className="block w-full py-2 px-3 text-sm border border-black-900 rounded-md focus:border-black"
               placeholder="Enter your name"
               value={userInfo.name}
               onChange={handleChange}
@@ -97,12 +95,27 @@ const PersonalD = () => {
             )}
           </div>
           <div className="my-4">
-            <label htmlFor="year" className="block text-sm text-black-500 mb-1">
+            <label
+              htmlFor="email"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Email
+            </label>
+            <input
+              type="email"
+              id="email"
+              className="block w-full py-2 px-3 text-sm border border-black-900 rounded-md focus:border-black"
+              value={email}
+              readOnly
+            />
+          </div>
+          <div className="my-4">
+            <label htmlFor="year" className="block text-sm font-medium text-gray-700">
               Program
             </label>
             <select
               id="year"
-              className="block w-full py-2 px-3 text-sm border border-blue-500 rounded-md focus:border-black"
+              className="block w-full py-2 px-3 text-sm border border-black-900 rounded-md focus:border-black"
               name="program"
               value={userInfo.program}
               onChange={handleChange}
@@ -120,13 +133,13 @@ const PersonalD = () => {
           <div className="my-4">
             <label
               htmlFor="branch"
-              className="block text-sm text-black-500 mb-1"
+              className="block text-sm font-medium text-gray-700"
             >
               Branch
             </label>
             <select
               id="branch"
-              className="block w-full py-2 px-3 text-sm border border-blue-500 rounded-md focus:border-black"
+              className="block w-full py-2 px-3 text-sm border border-black-900 rounded-md focus:border-black"
               name="branch"
               value={userInfo.branch}
               onChange={handleChange}
@@ -144,32 +157,19 @@ const PersonalD = () => {
               </option>
             </select>
           </div>
-          <div className="my-4">
-            <label
-              htmlFor="email"
-              className="block text-sm text-black-500 mb-1"
-            >
-              Email
-            </label>
-            <input
-              type="email"
-              id="email"
-              className="block w-full py-2 px-3 text-sm border border-blue-500 rounded-md focus:border-black"
-              value={email}
-              readOnly
-            />
-          </div>
-          <div className="my-4">
+          <div className="flex gap-2">
+            
+            <div className="my-4 w-1/2">
             <label
               htmlFor="phone"
-              className="block text-sm text-black-500 mb-1"
+              className="block text-sm font-medium text-gray-700"
             >
               Phone Number
             </label>
             <input
               type="tel"
               id="phone"
-              className="block w-full py-2 px-3 text-sm border border-blue-500 rounded-md focus:border-black"
+              className="block w-full py-2 px-3 text-sm border border-black-900 rounded-md focus:border-black"
               placeholder="Enter your phone number"
               name="phone"
               value={userInfo.phone}
@@ -180,33 +180,29 @@ const PersonalD = () => {
               <p className="text-red-500 text-sm">{errors.phone}</p>
             )}
           </div>
-          <div className="my-4">
-            <label htmlFor="dob" className="block text-sm text-black-500 mb-1">
+          <div className="my-4 w-1/2">
+            <label htmlFor="dob" className="block text-sm font-medium text-gray-700">
               Date of Birth
             </label>
             <input
               type="date"
               id="dob"
-              className="block w-full py-2 px-3 text-sm border border-blue-500 rounded-md focus:border-black"
+              className="block w-full py-2 px-3 text-sm border border-black-900 rounded-md focus:border-black"
               name="dob"
               value={userInfo.dob}
               onChange={handleChange}
               required
             />
           </div>
+          </div>
+          <div className="flex justify-end">
           <button
             type="submit"
-            className="w-full py-2.5 bg-purple-800 text-orange-300 font-bold rounded-md hover:bg-blue-500"
+            className="bg-blue-500 text-white py-2 px-4 rounded"
           >
-            Submit
+            Next
           </button>
-          <button
-            type="button"
-            onClick={handleBack}
-            className="mt-6 bg-gray-500 text-white py-2 px-4 rounded w-full md:w-auto"
-          >
-            Back
-          </button>
+          </div>
         </form>
       </div>
     </div>

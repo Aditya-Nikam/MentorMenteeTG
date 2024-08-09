@@ -27,9 +27,9 @@ const SemesterTable = ({ semesters, deleteSemesterDetails }) => {
               <td className="border px-4 py-2">
                 <button
                   onClick={() => deleteSemesterDetails(index)}
-                  className="bg-red-500 text-white py-1 px-2 rounded"
+                  className="bg-blue-700 text-white py-1 px-2 rounded"
                 >
-                  Click Here
+                  Delete
                 </button>
               </td>
             </tr>

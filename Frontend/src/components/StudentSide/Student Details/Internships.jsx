@@ -4,10 +4,6 @@ import { useNavigate } from "react-router-dom";
 const Internships = () => {
   const navigate = useNavigate();
   const [errors, setErrors] = useState({});
-  const [organizationName, setOrganizationName] = useState("");
-  const [mode, setMode] = useState("");
-  const [role, setRole] = useState("");
-
   const [stipend, setStipend] = useState("");
 
   const [internshipInfo, setInternshipInfo] = useState({
@@ -17,7 +13,7 @@ const Internships = () => {
     role: "",
     from: "",
     to: "",
-    Stipend: "",
+    stipend: "",
     mode: "",
   });
 
@@ -26,20 +22,15 @@ const Internships = () => {
     setInternshipInfo((prevInfo) => ({ ...prevInfo, [name]: value }));
   };
 
-  const handleStipendChange = (e) => {
-    const { id } = e.target;
-    setStipend(id === "stipend" ? "Yes" : "No");
-    internshipInfo.Stipend = stipend;
-  };
-
   useEffect(() => {
-    const internshipInfo = localStorage.getItem("internshipInfo");
-    if(internshipInfo){
-      setInternshipInfo(JSON.parse(internshipInfo))
+    const storedInternshipInfo = localStorage.getItem("internshipInfo");
+    if (storedInternshipInfo) {
+      setInternshipInfo(JSON.parse(storedInternshipInfo));
     }
   }, []);
 
-  const handleNext = () => {
+  const handleNext = (e) => {
+    e.preventDefault();
     localStorage.setItem("internshipInfo", JSON.stringify(internshipInfo));
     navigate("/StudentAchievement");
   };
@@ -49,39 +40,39 @@ const Internships = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-200">
-      <div className="bg-white border border-blue-700 rounded-md p-8 shadow-lg w-full max-w-md">
-        <h1 className="text-4xl font-bold text-center mb-8 text-green-900">
+    <div className="flex items-center justify-center bg-gray-100 min-h-screen ba p-4">
+      <div className="bg-white border rounded-md p-8 shadow-lg w-full max-w-lg">
+        <h1 className="text-2xl font-semibold mb-4">
           Internship Details
         </h1>
         <form onSubmit={handleNext}>
           <div className="my-4">
             <label
               htmlFor="organization"
-              className="block text-sm text-black-500 mb-1"
+              className="block text-sm font-medium text-gray-700"
             >
               Organization
             </label>
             <input
               type="text"
               id="organization"
-              className="block w-full py-2 px-3 text-sm border border-blue-500 rounded-md focus:border-black"
+              className="block w-full py-2 px-3 text-sm border border-black-900 rounded-md focus:border-black"
               placeholder="Enter Organization Name"
-              name="name"
-              value={internshipInfo.name}
+              name="organization"
+              value={internshipInfo.organization}
               onChange={handleChange}
             />
-            {errors.organizationName && (
-              <p className="text-red-500 text-sm">{errors.organizationName}</p>
+            {errors.organization && (
+              <p className="text-red-500 text-sm">{errors.organization}</p>
             )}
           </div>
           <div className="my-4">
-            <label htmlFor="year" className="block text-sm text-black-500 mb-1">
+            <label htmlFor="year" className="block text-sm font-medium text-gray-700">
               Year
             </label>
             <select
               id="year"
-              className="block w-full py-2 px-3 text-sm border border-blue-500 rounded-md focus:border-black"
+              className="block w-full py-2 px-3 text-sm border border-black-900 rounded-md focus:border-black"
               name="year"
               value={internshipInfo.year}
               onChange={handleChange}
@@ -89,20 +80,20 @@ const Internships = () => {
               <option value="" disabled hidden>
                 Select
               </option>
-              <option value="FE">FE</option>
-              <option value="SE">SE</option>
-              <option value="TE">TE</option>
-              <option value="BE">BE</option>
+              <option value="First Year">First Year (FE)</option>
+              <option value="Second Year">Second Year (SE)</option>
+              <option value="Third Year">Third Year (TE)</option>
+              <option value="Final Year">Final Year (BE)</option>
             </select>
           </div>
           <div className="my-4">
-            <label htmlFor="role" className="block text-sm text-black-500 mb-1">
+            <label htmlFor="role" className="block text-sm font-medium text-gray-700">
               Role
             </label>
             <input
               type="text"
               id="role"
-              className="block w-full py-2 px-3 text-sm border border-blue-500 rounded-md focus:border-black"
+              className="block w-full py-2 px-3 text-sm border border-black-900 rounded-md focus:border-black"
               placeholder="Enter your role"
               name="role"
               value={internshipInfo.role}
@@ -112,105 +103,95 @@ const Internships = () => {
               <p className="text-red-500 text-sm">{errors.role}</p>
             )}
           </div>
-          <div className="my-4">
-            <label
-              htmlFor="period-from"
-              className="block text-sm text-black-500 mb-1"
-            >
-              Period From
-            </label>
-            <input
-              type="date"
-              id="period-from"
-              className="block w-full py-2 px-3 text-sm border border-blue-500 rounded-md focus:border-black"
-              name="from"
-              value={internshipInfo.from}
-              onChange={handleChange}
-            />
-          </div>
-          <div className="my-4">
-            <label
-              htmlFor="period-to"
-              className="block text-sm text-black-500 mb-1"
-            >
-              Period To
-            </label>
-            <input
-              type="date"
-              id="period-to"
-              className="block w-full py-2 px-3 text-sm border border-blue-500 rounded-md focus:border-black"
-              name="to"
-              value={internshipInfo.to}
-              onChange={handleChange}
-            />
-          </div>
-          <div className="my-4">
-            <label
-              htmlFor="stipend"
-              className="block text-sm text-black-500 mb-1"
-            >
-              Stipend
-            </label>
-            <div className="flex items-center">
-              <input
-                type="checkbox"
-                id="stipend"
-                className="mr-2"
-                checked={stipend === "Yes"}
-                onChange={handleStipendChange}
-              />
-              <label htmlFor="stipend" className="text-sm text-black-500">
-                Yes
+          <div className="flex flex-col sm:flex-row gap-3">
+            <div className="my-4 w-full sm:w-1/2">
+              <label
+                htmlFor="period-from"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Period From
               </label>
               <input
-                type="checkbox"
-                id="no-stipend"
-                className="ml-4 mr-2"
-                checked={stipend === "No"}
-                onChange={handleStipendChange}
+                type="date"
+                id="period-from"
+                className="block w-full py-2 px-3 text-sm border border-black-900 rounded-md focus:border-black"
+                name="from"
+                value={internshipInfo.from}
+                onChange={handleChange}
               />
-              <label htmlFor="no-stipend" className="text-sm text-black-500">
-                No
+            </div>
+            <div className="my-4 w-full sm:w-1/2">
+              <label
+                htmlFor="period-to"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Period To
               </label>
+              <input
+                type="date"
+                id="period-to"
+                className="block w-full py-2 px-3 text-sm border border-black-900 rounded-md focus:border-black"
+                name="to"
+                value={internshipInfo.to}
+                onChange={handleChange}
+              />
             </div>
           </div>
-          <div className="my-4">
-            <label htmlFor="mode" className="block text-sm text-black-500 mb-1">
+          <div className="flex gap-3">
+          <div className="my-4 w-1/2">
+            <label htmlFor="stipend" className="block text-sm font-medium text-gray-700">
+              Stipend
+            </label>
+            <select
+              id="stipend"
+              className="block w-full py-2 px-3 text-sm border border-black-900 rounded-md focus:border-black"
+              name="stipend"
+              value={internshipInfo.stipend}
+              onChange={handleChange}
+            >
+              <option value="" disabled hidden>
+                Select Stipend
+              </option>
+              <option value="Yes">Yes</option>
+              <option value="No">No</option>
+            </select>
+          </div>
+          <div className="my-4 w-1/2">
+            <label htmlFor="mode" className="block text-sm font-medium text-gray-700">
               Mode
             </label>
-            <input
-              type="text"
+            <select
               id="mode"
-              className="block w-full py-2 px-3 text-sm border border-blue-500 rounded-md focus:border-black"
-              placeholder="Enter mode of internship"
+              className="block w-full py-2 px-3 text-sm border border-black-900 rounded-md focus:border-black"
               name="mode"
               value={internshipInfo.mode}
               onChange={handleChange}
-            />
-            {errors.mode && (
-              <p className="text-red-500 text-sm">{errors.mode}</p>
-            )}
+            >
+              <option value="" disabled hidden>
+                Select Mode
+              </option>
+              <option value="Online">Online</option>
+              <option value="Offline">Offline</option>
+              <option value="Hybrid">Hybrid</option>
+            </select>
           </div>
-          <button
-            type="submit"
-            className="w-full py-2.5 bg-purple-800 text-orange-300 font-bold rounded-md hover:bg-blue-500"
-          >
-            Submit
-          </button>
-          <button
-            type="button"
-            onClick={handleBack}
-            className="ml-4 bg-gray-500 text-white py-2 px-3 rounded"
-          >
-            Back
-          </button>
-          <button
-            type="button"
-            onClick={handleNext}
-            className="ml-4 bg-gray-500 text-white py-2 px-3 rounded"
-          >
-            Next
-          </button>
+
+          </div>
+          <div className="flex justify-between">
+            <button
+              type="button"
+              onClick={handleBack}
+              className="w-full sm:w-auto py-2 px-4 bg-gray-500 text-white rounded-md mb-2 sm:mb-0"
+            >
+              Back
+            </button>
+            <button
+              type="submit"
+              className="w-full sm:w-auto py-2 px-4 bg-blue-500 text-white rounded-md"
+            >
+              Next
+            </button>
+          </div>
         </form>
       </div>
     </div>
