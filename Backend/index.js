@@ -30,7 +30,7 @@ app.post('/login', (req, res) => {
     if (user && await bcrypt.compare(password, user[0].password)) {
       // console.log(user);
       const token = jwt.sign({ username: user.email }, SECRET_KEY, { expiresIn: '1h' });
-      res.json({ token ,  user });
+      res.json({ token, user });
     } else {
       res.status(401).send('Invalid credentials');
     }
@@ -81,6 +81,25 @@ app.post('/register', async (req, res) => {
         });
       });
     }
+  });
+});
+
+app.post("/setData", (req, res) => {
+  console.log("hehe")
+  const { personalInfo, semesters, internshipInfo, achievements } = req.body;
+  const personalInfoQuery = `
+  INSERT INTO \`mentor\`.\`studentinfo\` (id, name, program, branch, email, phone, dob)
+  VALUES ((SELECT id FROM \`mentor\`.\`login\` WHERE email = ?), ?, ?, ?, ?, ?, ?);`;
+  
+  const { name, program, branch, email, phone, dob } = personalInfo;
+
+  connection.query(personalInfoQuery, [email, name, program, branch, email, phone, dob], (err, result) => {
+    if (err) {
+      console.error('Error inserting data:', err);
+      res.status(500).send('Error inserting data into database.');
+      return;
+    }
+    res.status(201).json({ message: 'Data added successfully' });
   });
 });
 

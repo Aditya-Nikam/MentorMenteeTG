@@ -67,10 +67,22 @@ const getUser = () => {
     }
 };
 
+const setData =()=>{
+    let personalInfo = JSON.parse(localStorage.getItem("personalInfo"));
+    let semesters = JSON.parse(localStorage.getItem("semesters"));
+    let internshipInfo = JSON.parse(localStorage.getItem("internshipInfo"));
+    let achievements = JSON.parse(localStorage.getItem("achievements"));
+    return axios.post(`${API_URL}/setData`, { personalInfo, semesters, internshipInfo, achievements })
+        .then(response => {
+            console.log("sent");
+        });
+}
+
 export default {
     register,
     login,
     logout,
     getCurrentUser,
-    getUser
+    getUser,
+    setData
 };

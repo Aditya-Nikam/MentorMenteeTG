@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-
+import authService from "../../../services/authService";
 const StudentAchievement = () => {
   const [achievements, setAchievements] = useState([]);
   const [formData, setFormData] = useState({
@@ -51,6 +51,7 @@ const StudentAchievement = () => {
     localStorage.setItem("user",JSON.stringify(user));
     // console.log(achievements)
     navigate("/");
+    authService.setData();
   };
   return (
     <div className="flex items-center bg-gray-100 justify-center min-h-screen">

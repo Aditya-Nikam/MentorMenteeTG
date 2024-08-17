@@ -25,11 +25,13 @@ DROP TABLE IF EXISTS `login`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `login` (
+  `id` int NOT NULL AUTO_INCREMENT,
   `email` varchar(255) DEFAULT NULL,
   `password` varchar(255) DEFAULT NULL,
   `uid` varchar(16) DEFAULT NULL,
-  `type` varchar(16) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `type` varchar(16) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -38,7 +40,7 @@ CREATE TABLE `login` (
 
 LOCK TABLES `login` WRITE;
 /*!40000 ALTER TABLE `login` DISABLE KEYS */;
-INSERT INTO `login` VALUES ('student1@gmail.com','123','1','0'),('student2@gmail.com','123','1','0'),('student3@gmail.com','123','1','0'),('student4@gmail.com','123','1','0'),('student5@gmail.com','123','1','1');
+INSERT INTO `login` VALUES (1,'student1@gmail.com','$2b$10$mwlSOKMs8orNgRLdYnDSheilnItvUaa5RTKBpn9KlQ7oULwncVB/m','1','1'),(2,'student2@gmail.com','$2b$10$yEyaN6aQ9B.ZbpEV9HKhSuJmUlOuq.IZheI5aMa/62UCNZjgqLm.C','1','1'),(3,'student3@gmail.com','$2b$10$WbREIgGp0DMhFXp08p4vCuevgThrbdbQrFEfV6Zweh3NHKDDg1iJe','1','1'),(4,'student4@gmail.com','$2b$10$3mClf00k8/KSSmq/vX3ciuSiULqCXdCS7BbKlDNiC7qhyWLh/Iz6u','1','1'),(5,'student7@gmail.com','$2b$10$PoO84KNKSlAHK2b0CbbJLO542cRxVhZpsVpkwNf9nIxTW2ykrWZ.S','1','1');
 /*!40000 ALTER TABLE `login` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -51,4 +53,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-07-28 15:30:08
+-- Dump completed on 2024-08-04 22:04:13
