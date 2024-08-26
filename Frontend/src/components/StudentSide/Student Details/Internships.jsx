@@ -4,7 +4,7 @@ import { useNavigate, Link } from 'react-router-dom';
 const Internships = () => {
   const [internships, setInternships] = useState([]);
   const [formData, setFormData] = useState({
-    organizationName: '',
+    organization: '',
     year: '',
     role: '',
     periodFrom: '',
@@ -35,7 +35,7 @@ const Internships = () => {
     e.preventDefault();
     setInternships([...internships, formData]);
     setFormData({
-      organizationName: '',
+      organization: '',
       year: '',
       role: '',
       periodFrom: '',
@@ -63,11 +63,11 @@ const Internships = () => {
         <form onSubmit={handleSubmit} className="mb-6">
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 mb-4">
             <div>
-              <label htmlFor="organizationName" className="block text-sm font-medium text-gray-700">Organization Name</label>
+              <label htmlFor="organization" className="block text-sm font-medium text-gray-700">Organization Name</label>
               <input
                 type="text"
-                id="organizationName"
-                value={formData.organizationName}
+                id="organization"
+                value={formData.organization}
                 onChange={handleChange}
                 placeholder="Enter Organization Name"
                 className="mt-1 px-3 py-2 border border-gray-300 rounded w-full"
@@ -168,7 +168,7 @@ const Internships = () => {
             <tbody className="bg-white divide-y divide-gray-200">
               {internships.map((internship, index) => (
                 <tr key={index}>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{internship.organizationName}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{internship.organization}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{internship.year}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{internship.role}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">

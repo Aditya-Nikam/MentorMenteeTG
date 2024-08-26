@@ -30,5 +30,19 @@ CREATE TABLE cgpadetails (
     FOREIGN KEY (id) REFERENCES login(id)
 );
 
+
+CREATE TABLE internshipinfo (
+    iid INT PRIMARY KEY AUTO_INCREMENT,
+    id INT,
+    organization VARCHAR(225),
+    year VARCHAR(10),
+    role VARCHAR(225),
+    periodFrom DATE,
+    periodTo DATE,
+    stipend boolean,
+    mode VARCHAR(20),
+    FOREIGN KEY (id) REFERENCES login(id)
+);
+
 INSERT INTO studentinfo (id, name, program, branch, email, phone, dob)
 VALUES (LAST_INSERT_ID(), 'John Doe', 'B.Tech', 'CSE', 'john.doe@example.com', '1234567890', '2000-01-01');

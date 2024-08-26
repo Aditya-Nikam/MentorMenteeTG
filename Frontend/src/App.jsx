@@ -24,9 +24,15 @@ function App() {
     <Router>
       <Routes>
         <Route path="/login" element={<Login />} />
-        <Route path="/" element={authService.getCurrentUser()?<Dashboard />:<Login />} />
+        <Route
+          path="/"
+          element={authService.getCurrentUser() ? <Dashboard /> : <Login />}
+        />
         <Route path="/registration" element={<RegistrationPage />} />
-        <Route path="/userInfo" element={<UserData />} />
+        <Route
+          path="/userInfo"
+          element={<ProtectedRoute element={<UserData />} />}
+        />
         <Route
           path="/dashboard"
           element={<ProtectedRoute element={<Dashboard />} />}
@@ -39,10 +45,19 @@ function App() {
           path="/hod-dashboard"
           element={<ProtectedRoute element={<HodDashboard />} />}
         />
-        <Route path="/PersonalD" element={<PersonalD />} />
-        <Route path="/Internships" element={<Internship />} />
-        <Route path="/StudentAchievement" element={<StudentAchievement />} />
-        <Route path="/CGPA" element={<Cgpa />} />
+        <Route
+          path="/PersonalD"
+          element={<ProtectedRoute element={<PersonalD />} />}
+        />
+        <Route
+          path="/Internships"
+          element={<ProtectedRoute element={<Internship />} />}
+        />
+        <Route
+          path="/StudentAchievement"
+          element={<ProtectedRoute element={<StudentAchievement />} />}
+        />
+        <Route path="/CGPA" element={<ProtectedRoute element={<Cgpa />} />} />
       </Routes>
     </Router>
   );
