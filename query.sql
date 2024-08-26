@@ -18,6 +18,17 @@ CREATE TABLE studentinfo (
     FOREIGN KEY (id) REFERENCES login(id)
 );
 
+CREATE TABLE cgpadetails (
+    cid INT PRIMARY KEY AUTO_INCREMENT,
+    id INT,
+    semester VARCHAR(225),
+    grade int(10),
+    internalkt int(10),
+    externalkt int(10),
+    totalkt int(10),
+    aggrigate varchar(225),
+    FOREIGN KEY (id) REFERENCES login(id)
+);
 
 INSERT INTO studentinfo (id, name, program, branch, email, phone, dob)
 VALUES (LAST_INSERT_ID(), 'John Doe', 'B.Tech', 'CSE', 'john.doe@example.com', '1234567890', '2000-01-01');

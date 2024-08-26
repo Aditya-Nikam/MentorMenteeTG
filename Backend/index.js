@@ -99,8 +99,30 @@ app.post("/setData", (req, res) => {
       res.status(500).send('Error inserting data into database.');
       return;
     }
-    res.status(201).json({ message: 'Data added successfully' });
+    // res.status(201).json({ message: 'Data added successfully' });
   });
+
+  const semQuery = `
+  INSERT INTO \`mentor\`.\`cgpadetails\` (id, semester, grade, internalkt, externalkt, totalkt, aggrigate)
+  VALUES ((SELECT id FROM \`mentor\`.\`login\` WHERE email = ?), ?, ?, ?, ?, ?, ?);`;
+
+  for (const sem in  semesters) {
+    console.log(sem);
+    const {semester, grade, internalKT, externalKT, totalKT, aggregate} =semesters[sem];
+
+    // console.log(semester, grade, internalkt, externalkt, totalkt, aggrigate);
+
+    connection.query(semQuery, [personalInfo.email, semester, grade, internalKT, externalKT, totalKT, aggregate], (err, result) => {
+      if (err) {
+        console.error('Error inserting data:', err);
+        res.status(500).send('Error inserting data into database.');
+        return;
+      }
+      // res.status(201).json({ message: 'Data added successfully' });
+    });
+  }
+
+  
 });
 
 
