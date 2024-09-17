@@ -26,9 +26,9 @@ const LoginPage = () => {
       console.log(user);
       // Redirect based on user type
       if (uid == "1" && type == "0") {
-        navigate("/dashboard");
+        navigate("/sdashboard");
       } else if (uid === "1" && type === "1") {
-        navigate("/dashboard");
+        navigate("/sdashboard");
       } else if (uid === "2" && type === "0") {
         navigate("/MentorDashboard");
       } else if (uid === "3" && type === "0") {

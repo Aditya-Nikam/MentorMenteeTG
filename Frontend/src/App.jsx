@@ -7,17 +7,14 @@ import {
 } from "react-router-dom";
 import Login from "./components/Login";
 import RegistrationPage from "./components/Registrationpage";
-import Dashboard from "./components/StudentSide/Dashboard";
 import ProtectedRoute from "./components/ProtectedRoute";
-import MentorDashboard from "./components/MentorSide/MentorDashboard";
-import HodDashboard from "./components/HodSide/HodDashboard";
-// import CGPAForm from "./components/StudentSide/Student Details/Student Details/CGPAForm";
-import Cgpa from "./components/StudentSide/Student Details/CGPA";
-import StudentAchievement from "./components/StudentSide/Student Details/StudentAchievement";
-import Internship from "./components/StudentSide/Student Details/Internships";
-import PersonalD from "./components/StudentSide/Student Details/PersonalD";
+import Sdashboard from "./components/StudentSide/Sdashboard";
+import StudentD from "./components/StudentSide/Student Details/StudentD";
+import ParentD from "./components/StudentSide/Student Details/ParentD";
+import Internships from "./components/StudentSide/Student Details/Internships";
 import authService from "./services/authService";
-import UserData from "./components/StudentSide/userData";
+import PYDetails from "./components/StudentSide/Student Details/PYDetails";
+import CurrentD from "./components/StudentSide/Student Details/CurrentD";
 
 function App() {
   return (
@@ -26,38 +23,16 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route
           path="/"
-          element={authService.getCurrentUser() ? <Dashboard /> : <Login />}
+          element={authService.getCurrentUser() ? <Sdashboard /> : <Login />}
         />
         <Route path="/registration" element={<RegistrationPage />} />
-        <Route
-          path="/userInfo"
-          element={<ProtectedRoute element={<UserData />} />}
-        />
-        <Route
-          path="/dashboard"
-          element={<ProtectedRoute element={<Dashboard />} />}
-        />
-        <Route
-          path="/mentor-dashboard"
-          element={<ProtectedRoute element={<MentorDashboard />} />}
-        />
-        <Route
-          path="/hod-dashboard"
-          element={<ProtectedRoute element={<HodDashboard />} />}
-        />
-        <Route
-          path="/PersonalD"
-          element={<ProtectedRoute element={<PersonalD />} />}
-        />
-        <Route
-          path="/Internships"
-          element={<ProtectedRoute element={<Internship />} />}
-        />
-        <Route
-          path="/StudentAchievement"
-          element={<ProtectedRoute element={<StudentAchievement />} />}
-        />
-        <Route path="/CGPA" element={<ProtectedRoute element={<Cgpa />} />} />
+        <Route path="/sdashboard" element={<Sdashboard />} />
+        <Route path="/studentd" element={<StudentD />} />
+        <Route path="/parentd" element={<ParentD />} />
+        <Route path="/internships" element={<Internships />} />
+        <Route path="/pydetails" element={<PYDetails/>} />
+        <Route path="/currentd" element={<CurrentD/>} />
+       
       </Routes>
     </Router>
   );

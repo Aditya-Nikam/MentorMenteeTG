@@ -37,7 +37,7 @@ const RegistrationPage = () => {
       alert("User already exists");
     }
 
-    navigate("/dashboard");
+    navigate("/sdashboard");
   };
 
   const handleGoToLogin = () => {

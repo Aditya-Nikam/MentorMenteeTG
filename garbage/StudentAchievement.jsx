@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import authService from "../../../services/authService";
+import authService from "../Frontend/src/services/authService";
 const StudentAchievement = () => {
   const [achievements, setAchievements] = useState([]);
   const [formData, setFormData] = useState({
@@ -46,9 +46,9 @@ const StudentAchievement = () => {
   };
   const handleNext = () => {
     localStorage.setItem("achievements", JSON.stringify(achievements));
-    const user=JSON.parse(localStorage.getItem("user"));
-    user.type="0";
-    localStorage.setItem("user",JSON.stringify(user));
+    const user = JSON.parse(localStorage.getItem("user"));
+    user.type = "0";
+    localStorage.setItem("user", JSON.stringify(user));
     // console.log(achievements)
     navigate("/");
     authService.setData();

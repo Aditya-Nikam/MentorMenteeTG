@@ -1,13 +1,13 @@
 import { Link, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useEffect } from 'react';
+import React, { useEffect } from "react";
 import {
   faUser,
   faGraduationCap,
   faBriefcase,
   faTrophy,
 } from "@fortawesome/free-solid-svg-icons";
-import authService from "../../services/authService";
+import authService from "../Frontend/src/services/authService";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -16,7 +16,7 @@ const Dashboard = () => {
     if (authService.getUser()) {
       navigate("/userInfo");
     }
-  }, [navigate])
+  }, [navigate]);
 
   function goToPersonalD() {
     navigate("/PersonalD");

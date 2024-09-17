@@ -1,203 +1,252 @@
-import { useState, useEffect } from "react";
-import { useNavigate, Link } from 'react-router-dom';
+import { useState } from "react";
+import { FaEdit, FaTrash } from "react-icons/fa"; // Import icons
+import Navbars from "../Navbars";
 
 const Internships = () => {
-  const [internships, setInternships] = useState([]);
   const [formData, setFormData] = useState({
-    organization: '',
-    year: '',
-    role: '',
-    periodFrom: '',
-    periodTo: '',
-    stipend: false,
-    mode: '',
+    companyName: "",
+    jobProfile: "",
+    startDate: "",
+    endDate: "",
+    stipend: "",
+    certificate: null,
   });
 
-  const navigate = useNavigate();
+  const [internshipRecords, setInternshipRecords] = useState([]);
 
   const handleChange = (e) => {
-    const { id, value, type, checked } = e.target;
-    if (type === 'checkbox') {
-      setFormData((prevData) => ({ ...prevData, [id]: checked }));
-    } else {
-      setFormData((prevData) => ({ ...prevData, [id]: value }));
-    }
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
   };
 
-  useEffect(() => {
-    const storedInternshipInfo = localStorage.getItem("internshipInfo");
-    if (storedInternshipInfo) {
-      setInternships(JSON.parse(storedInternshipInfo));
-    }
-  }, []);
+  const handleCertificateChange = (e) => {
+    setFormData({ ...formData, certificate: e.target.files[0] });
+  };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    setInternships([...internships, formData]);
+  const handleAddRecord = () => {
+    // Add the form data to the internshipRecords array
+    setInternshipRecords([...internshipRecords, { ...formData }]);
+    // Reset form data after submission
     setFormData({
-      organization: '',
-      year: '',
-      role: '',
-      periodFrom: '',
-      periodTo: '',
-      stipend: false,
-      mode: '',
+      companyName: "",
+      jobProfile: "",
+      startDate: "",
+      endDate: "",
+      stipend: "",
+      certificate: null,
     });
   };
 
-  const handleBack = () => {
-    navigate('/CGPA');
+  const handleDeleteRecord = (index) => {
+    // Delete a specific record by index
+    setInternshipRecords(internshipRecords.filter((_, i) => i !== index));
   };
 
-  const handleNext = (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    localStorage.setItem("internshipInfo", JSON.stringify(internships));
-    navigate('/StudentAchievement');
+    handleAddRecord(); // Add record to the list
   };
 
   return (
-    <div className="flex min-h-screen bg-gray-100 items-center justify-center">
-      <main className="bg-white border rounded-md p-4 shadow-lg max-w-4xl w-full">
-        <h1 className="text-2xl font-bold mb-4 text-left">Internship Details</h1>
+    <>
+      <Navbars />
+      <div className="min-h-screen bg-gray-100 p-2">
+        <div className="flex items-center justify-center min-h-screen">
+          <div className="bg-white border m-3 p-9 shadow-2xl w-full max-w-3xl relative">
+            <h1 className="text-2xl font-bold font-serif text-black text-left mb-6">
+              Internship Details
+            </h1>
 
-        <form onSubmit={handleSubmit} className="mb-6">
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 mb-4">
-            <div>
-              <label htmlFor="organization" className="block text-sm font-medium text-gray-700">Organization Name</label>
-              <input
-                type="text"
-                id="organization"
-                value={formData.organization}
-                onChange={handleChange}
-                placeholder="Enter Organization Name"
-                className="mt-1 px-3 py-2 border border-gray-300 rounded w-full"
-                required
-              />
-            </div>
-            <div>
-              <label htmlFor="year" className="block text-sm font-medium text-gray-700">Year</label>
-              <select
-                id="year"
-                value={formData.year}
-                onChange={handleChange}
-                className="mt-1 px-3 py-2 border border-gray-300 rounded w-full"
-              >
-                <option value="">Select Year</option>
-                <option value="FE">FE</option>
-                <option value="SE">SE</option>
-                <option value="TE">TE</option>
-                <option value="BE">BE</option>
-              </select>
-            </div>
-            <div>
-              <label htmlFor="role" className="block text-sm font-medium text-gray-700">Role</label>
-              <input
-                type="text"
-                id="role"
-                value={formData.role}
-                onChange={handleChange}
-                placeholder="Enter your role"
-                className="mt-1 px-3 py-2 border border-gray-300 rounded w-full"
-                required
-              />
-            </div>
-            <div>
-              <label htmlFor="periodFrom" className="block text-sm font-medium text-gray-700">Period From</label>
-              <input
-                type="date"
-                id="periodFrom"
-                value={formData.periodFrom}
-                onChange={handleChange}
-                className="mt-1 px-3 py-2 border border-gray-300 rounded w-full"
-              />
-            </div>
-            <div>
-              <label htmlFor="periodTo" className="block text-sm font-medium text-gray-700">Period To</label>
-              <input
-                type="date"
-                id="periodTo"
-                value={formData.periodTo}
-                onChange={handleChange}
-                className="mt-1 px-3 py-2 border border-gray-300 rounded w-full"
-              />
-            </div>
-            <div>
-              <label htmlFor="stipend" className="block text-sm font-medium text-gray-700">Stipend</label>
-              <input
-                type="checkbox"
-                id="stipend"
-                checked={formData.stipend}
-                onChange={handleChange}
-                className="mr-2"
-              />
-              <span className="text-sm">Yes</span>
-            </div>
-            <div>
-              <label htmlFor="mode" className="block text-sm font-medium text-gray-700">Mode</label>
-              <select
-                id="mode"
-                value={formData.mode}
-                onChange={handleChange}
-                className="mt-1 px-3 py-2 border border-gray-300 rounded w-full"
-              >
-                <option value="">Select Mode</option>
-                <option value="Remote">Remote</option>
-                <option value="Hybrid">Hybrid</option>
-                <option value="On-Site">On-Site</option>
-              </select>
-            </div>
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {/* Company Name */}
+                <div>
+                  <label
+                    htmlFor="companyName"
+                    className="block text-sm font-medium text-gray-700"
+                  >
+                    Company Name
+                  </label>
+                  <input
+                    type="text"
+                    id="companyName"
+                    name="companyName"
+                    value={formData.companyName}
+                    onChange={handleChange}
+                    required
+                    className="mt-1 block w-full px-3 py-2 border border-gray-600 rounded-md shadow-sm sm:text-sm"
+                  />
+                </div>
+
+                {/* Job Profile */}
+                <div>
+                  <label
+                    htmlFor="jobProfile"
+                    className="block text-sm font-medium text-gray-700"
+                  >
+                    Job Profile
+                  </label>
+                  <input
+                    type="text"
+                    id="jobProfile"
+                    name="jobProfile"
+                    value={formData.jobProfile}
+                    onChange={handleChange}
+                    required
+                    className="mt-1 block w-full px-3 py-2 border border-gray-600 rounded-md shadow-sm sm:text-sm"
+                  />
+                </div>
+              </div>
+
+              {/* Start Date and End Date in a row */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label
+                    htmlFor="startDate"
+                    className="block text-sm font-medium text-gray-700"
+                  >
+                    Start Date
+                  </label>
+                  <input
+                    type="date"
+                    id="startDate"
+                    name="startDate"
+                    value={formData.startDate}
+                    onChange={handleChange}
+                    required
+                    className="mt-1 block w-full px-3 py-2 border border-gray-600 rounded-md shadow-sm sm:text-sm"
+                  />
+                </div>
+
+                <div>
+                  <label
+                    htmlFor="endDate"
+                    className="block text-sm font-medium text-gray-700"
+                  >
+                    End Date
+                  </label>
+                  <input
+                    type="date"
+                    id="endDate"
+                    name="endDate"
+                    value={formData.endDate}
+                    onChange={handleChange}
+                    required
+                    className="mt-1 block w-full px-3 py-2 border border-gray-600 rounded-md shadow-sm sm:text-sm"
+                  />
+                </div>
+              </div>
+
+              {/* Stipend and Certificate Upload in a row */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label
+                    htmlFor="stipend"
+                    className="block text-sm font-medium text-gray-700"
+                  >
+                    Stipend
+                  </label>
+                  <select
+                    id="stipend"
+                    name="stipend"
+                    value={formData.stipend}
+                    onChange={handleChange}
+                    required
+                    className="mt-1 block w-full px-3 py-2 border border-gray-600 rounded-md shadow-sm sm:text-sm"
+                  >
+                    <option value="Yes">Yes</option>
+                    <option value="No">No</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label
+                    htmlFor="certificate"
+                    className="block text-sm font-medium text-gray-700"
+                  >
+                    Upload Certificate
+                  </label>
+                  <input
+                    type="file"
+                    id="certificate"
+                    name="certificate"
+                    onChange={handleCertificateChange}
+                    className="mt-1 block w-full px-3 py-2 border border-gray-600 rounded-md shadow-sm sm:text-sm"
+                  />
+                </div>
+              </div>
+
+              {/* Buttons */}
+              <div className="flex justify-between mt-6 space-x-2">
+                <button
+                  type="button"
+                  onClick={handleAddRecord}
+                  className="bg-blue-800 text-white py-2 px-4 rounded-md shadow-sm hover:bg-blue-600 w-half"
+                >
+                  Add Details
+                </button>
+              </div>
+
+              <div className="flex justify-center mt-2">
+                <button
+                  type="submit"
+                  className="bg-cyan-400 text-white py-2 px-4 rounded-md shadow-sm hover:bg-cyan-600 w-full"
+                >
+                  Submit
+                </button>
+              </div>
+            </form>
+
+            {/* Display all records */}
+            {internshipRecords.length > 0 && (
+              <div className="mt-8">
+                <h3 className="text-lg font-medium text-gray-700 mb-2">
+                  Internship Records
+                </h3>
+                <div className="overflow-x-auto">
+                  <table className="min-w-full bg-white shadow-md rounded-lg text-sm">
+                    <thead>
+                      <tr>
+                        <th className="border px-4 py-2">Company Name</th>
+                        <th className="border px-4 py-2">Job Profile</th>
+                        <th className="border px-4 py-2">Start Date</th>
+                        <th className="border px-4 py-2">End Date</th>
+                        <th className="border px-4 py-2">Stipend</th>
+                        <th className="border px-4 py-2">Certificate</th>
+                        <th className="border px-4 py-2">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {internshipRecords.map((record, index) => (
+                        <tr key={index}>
+                          <td className="border px-4 py-2">{record.companyName}</td>
+                          <td className="border px-4 py-2">{record.jobProfile}</td>
+                          <td className="border px-4 py-2">{record.startDate}</td>
+                          <td className="border px-4 py-2">{record.endDate}</td>
+                          <td className="border px-4 py-2">{record.stipend}</td>
+                          <td className="border px-4 py-2">
+                            {record.certificate ? record.certificate.name : "No Certificate"}
+                          </td>
+                          <td className="border px-4 py-2">
+                            <div className="flex space-x-2">
+                              <FaEdit className="text-yellow-500 cursor-pointer" />
+                              <FaTrash
+                                className="text-red-500 cursor-pointer"
+                                onClick={() => handleDeleteRecord(index)}
+                              />
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            )}
           </div>
-          <button type="submit" className="bg-blue-500 text-white py-2 px-4 rounded w-full md:w-auto">
-            Add Internship
-          </button>
-        </form>
-
-        <h2 className="text-xl font-semibold mb-4 text-center">Internship List</h2>
-        <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
-              <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Organization Name</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Year</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Role</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Period</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Stipend</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Mode</th>
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
-              {internships.map((internship, index) => (
-                <tr key={index}>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{internship.organization}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{internship.year}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{internship.role}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {internship.periodFrom} - {internship.periodTo}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{internship.stipend ? 'Yes' : 'No'}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{internship.mode}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
         </div>
-
-        <div className="flex justify-between mt-4">
-          <button
-            onClick={handleBack}
-            className="bg-gray-500 text-white py-2 px-4 rounded"
-          >
-            Back
-          </button>
-          <button
-            onClick={handleNext}
-            className="bg-blue-500 text-white py-2 px-4 rounded"
-          >
-            Next
-          </button>
-        </div>
-      </main>
-    </div>
+      </div>
+    </>
   );
 };
 
