@@ -10,23 +10,52 @@ const CurrentD = () => {
     universityMarks: "",
     twMarks: "",
     passFail: "",
-    cgpa: "",
-    certificate: null,
   });
 
-  const [subjects, setSubjects] = useState([]);
+  const [semesterSubjects, setSemesterSubjects] = useState({});
+  const [editingIndex, setEditingIndex] = useState(null);
+  const [errors, setErrors] = useState({});
 
   const handleChange = (e) => {
-    const { name, value, files } = e.target;
-    if (name === "certificate") {
-      setFormData({ ...formData, certificate: files[0] });
-    } else {
-      setFormData({ ...formData, [name]: value });
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
+
+  const validateForm = () => {
+    const newErrors = {};
+    if (!formData.semester) newErrors.semester = "Semester is required.";
+    if (!formData.subjectName) newErrors.subjectName = "Subject name is required.";
+    if (formData.subjectName.length < 3) newErrors.subjectName = "Subject name must be at least 3 characters.";
+    if (!formData.oralMarks || isNaN(formData.oralMarks)) {
+      newErrors.oralMarks = "Valid oral marks are required.";
     }
+    if (!formData.universityMarks || isNaN(formData.universityMarks)) {
+      newErrors.universityMarks = "Valid university marks are required.";
+    }
+    if (!formData.twMarks || isNaN(formData.twMarks)) {
+      newErrors.twMarks = "Valid TW marks are required.";
+    }
+    if (!formData.passFail) newErrors.passFail = "Pass/Fail status is required.";
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
   };
 
   const handleAddOrUpdate = () => {
-    setSubjects([...subjects, { ...formData }]);
+    if (!validateForm()) return;
+
+    const updatedSubjects = semesterSubjects[formData.semester] || [];
+    if (editingIndex === null) {
+      updatedSubjects.push(formData);
+    } else {
+      updatedSubjects[editingIndex] = formData;
+    }
+
+    setSemesterSubjects({
+      ...semesterSubjects,
+      [formData.semester]: updatedSubjects,
+    });
+
     setFormData({
       semester: "",
       subjectName: "",
@@ -34,28 +63,38 @@ const CurrentD = () => {
       universityMarks: "",
       twMarks: "",
       passFail: "",
-      cgpa: "",
-      certificate: null,
     });
+    setEditingIndex(null);
+    setErrors({});
   };
 
-  const handleDelete = (index) => {
-    setSubjects(subjects.filter((_, i) => i !== index));
+  const handleDelete = (semester, index) => {
+    const updatedSubjects = semesterSubjects[semester].filter((_, i) => i !== index);
+    setSemesterSubjects({ ...semesterSubjects, [semester]: updatedSubjects });
+  };
+
+  const handleEdit = (semester, index) => {
+    const subject = semesterSubjects[semester][index];
+    setFormData(subject);
+    setEditingIndex(index);
+    setErrors({});
+  };
+
+  const handleSubmit = () => {
+    alert("Form submitted!");
   };
 
   return (
     <>
       <Navbars />
       <div className="min-h-screen bg-gray-100 p-5">
-        <div className="bg-white border p-9 shadow-2xl w-full max-w-4xl mx-auto">
-          <h1 className="text-2xl font-bold font-serif text-black text-left mb-6">
+        <div className="bg-white border p-10 shadow-2xl w-full max-xl mx-auto">
+          <h1 className="text-2xl font-bold text-black text-left mb-6">
             Current Result Details
           </h1>
 
-          {/* Form */}
           <form className="space-y-4">
             <div className="flex flex-wrap gap-4">
-              {/* Semester */}
               <div className="flex-1 min-w-[150px]">
                 <label htmlFor="semester" className="block text-sm font-medium text-gray-700">
                   Semester
@@ -67,11 +106,11 @@ const CurrentD = () => {
                   value={formData.semester}
                   onChange={handleChange}
                   required
-                  className="mt-1 block w-full px-3 py-2 border border-gray-700 rounded-md shadow-sm"
+                  className={`mt-1 block w-full px-3 py-2 border ${errors.semester ? "border-red-500" : "border-gray-700"} rounded-md shadow-sm`}
                 />
+                {errors.semester && <p className="text-red-500 text-sm">{errors.semester}</p>}
               </div>
 
-              {/* Subject Name */}
               <div className="flex-1 min-w-[150px]">
                 <label htmlFor="subjectName" className="block text-sm font-medium text-gray-700">
                   Subject Name
@@ -82,166 +121,136 @@ const CurrentD = () => {
                   name="subjectName"
                   value={formData.subjectName}
                   onChange={handleChange}
-                  required
-                  className="mt-1 block w-full px-3 py-2 border border-gray-700 rounded-md shadow-sm"
+                  className={`mt-1 block w-full px-3 py-2 border ${errors.subjectName ? "border-red-500" : "border-gray-700"} rounded-md shadow-sm`}
                 />
+                {errors.subjectName && <p className="text-red-500 text-sm">{errors.subjectName}</p>}
               </div>
 
-              {/* Oral Marks */}
               <div className="flex-1 min-w-[150px]">
                 <label htmlFor="oralMarks" className="block text-sm font-medium text-gray-700">
                   Oral Marks
                 </label>
                 <input
-                  type="number"
+                  type="text"
                   id="oralMarks"
                   name="oralMarks"
                   value={formData.oralMarks}
                   onChange={handleChange}
-                  required
-                  className="mt-1 block w-full px-3 py-2 border border-gray-700 rounded-md shadow-sm"
+                  className={`mt-1 block w-full px-3 py-2 border ${errors.oralMarks ? "border-red-500" : "border-gray-700"} rounded-md shadow-sm`}
                 />
+                {errors.oralMarks && <p className="text-red-500 text-sm">{errors.oralMarks}</p>}
               </div>
 
-              {/* University Marks */}
               <div className="flex-1 min-w-[150px]">
                 <label htmlFor="universityMarks" className="block text-sm font-medium text-gray-700">
                   University Marks
                 </label>
                 <input
-                  type="number"
+                  type="text"
                   id="universityMarks"
                   name="universityMarks"
                   value={formData.universityMarks}
                   onChange={handleChange}
-                  required
-                  className="mt-1 block w-full px-3 py-2 border border-gray-700 rounded-md shadow-sm"
+                  className={`mt-1 block w-full px-3 py-2 border ${errors.universityMarks ? "border-red-500" : "border-gray-700"} rounded-md shadow-sm`}
                 />
+                {errors.universityMarks && <p className="text-red-500 text-sm">{errors.universityMarks}</p>}
               </div>
 
-              {/* Term Work Marks */}
               <div className="flex-1 min-w-[150px]">
                 <label htmlFor="twMarks" className="block text-sm font-medium text-gray-700">
-                  Term Work Marks
+                  TW Marks
                 </label>
                 <input
-                  type="number"
+                  type="text"
                   id="twMarks"
                   name="twMarks"
                   value={formData.twMarks}
                   onChange={handleChange}
-                  required
-                  className="mt-1 block w-full px-3 py-2 border border-gray-700 rounded-md shadow-sm"
+                  className={`mt-1 block w-full px-3 py-2 border ${errors.twMarks ? "border-red-500" : "border-gray-700"} rounded-md shadow-sm`}
                 />
+                {errors.twMarks && <p className="text-red-500 text-sm">{errors.twMarks}</p>}
               </div>
 
-              {/* Pass/Fail */}
               <div className="flex-1 min-w-[150px]">
                 <label htmlFor="passFail" className="block text-sm font-medium text-gray-700">
-                  Pass/Fail Status
+                  Pass/Fail
                 </label>
                 <select
                   id="passFail"
                   name="passFail"
                   value={formData.passFail}
                   onChange={handleChange}
-                  required
-                  className="mt-1 block w-full px-3 py-2 border border-gray-700 rounded-md shadow-sm"
+                  className={`mt-1 block w-full px-3 py-2 border ${errors.passFail ? "border-red-500" : "border-gray-700"} rounded-md shadow-sm`}
                 >
-                  <option value="">Select Status</option>
+                  <option value="">Select</option>
                   <option value="Pass">Pass</option>
                   <option value="Fail">Fail</option>
                 </select>
+                {errors.passFail && <p className="text-red-500 text-sm">{errors.passFail}</p>}
               </div>
 
-              {/* CGPA */}
-              <div className="flex-1 min-w-[150px]">
-                <label htmlFor="cgpa" className="block text-sm font-medium text-gray-700">
-                  Total CGPA
-                </label>
-                <input
-                  type="number"
-                  id="cgpa"
-                  name="cgpa"
-                  value={formData.cgpa}
-                  onChange={handleChange}
-                  required
-                  className="mt-1 block w-full px-3 py-2 border border-gray-700 rounded-md shadow-sm"
-                />
-              </div>
-
-              {/* Certificate Upload */}
-              <div className="flex-1 min-w-[150px]">
-                <label htmlFor="certificate" className="block text-sm font-medium text-gray-700">
-                  Upload Marksheet
-                </label>
-                <input
-                  type="file"
-                  id="certificate"
-                  name="certificate"
-                  onChange={handleChange}
-                  className="mt-1 block w-full px-3 py-2 border border-gray-700 rounded-md shadow-sm"
-                />
-              </div>
+              <button
+                type="button"
+                onClick={handleAddOrUpdate}
+                className="bg-blue-800 text-white py-2 px-4 rounded-md shadow-sm hover:bg-blue-700 mt-4"
+              >
+                {editingIndex === null ? "Add Subject" : "Update Subject"}
+              </button>
             </div>
-
-            {/* Add/Update Button */}
-            <button
-              type="button"
-              onClick={handleAddOrUpdate}
-              className="bg-blue-600 text-white py-2 px-4 rounded-md shadow-sm hover:bg-blue-800 mt-4"
-            >
-              Add/Update Subject
-            </button>
           </form>
 
-          {/* Table to display subjects */}
-          {subjects.length > 0 && (
+          {Object.keys(semesterSubjects).length > 0 && (
             <div className="mt-8">
-              <h3 className="text-lg font-medium text-gray-700 mb-2">Subject Details</h3>
-              <table className="min-w-full bg-white shadow-md rounded-lg">
-                <thead>
-                  <tr>
-                    <th className="border px-4 py-2">Subject Name</th>
-                    <th className="border px-4 py-2">Oral Marks</th>
-                    <th className="border px-4 py-2">University Marks</th>
-                    <th className="border px-4 py-2">TW Marks</th>
-                    <th className="border px-4 py-2">Pass/Fail</th>
-                    <th className="border px-4 py-2">CGPA</th>
-                    <th className="border px-4 py-2">Certificate</th>
-                    <th className="border px-4 py-2">Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {subjects.map((subject, index) => (
-                    <tr key={index}>
-                      <td className="border px-4 py-2">{subject.subjectName}</td>
-                      <td className="border px-4 py-2">{subject.oralMarks}</td>
-                      <td className="border px-4 py-2">{subject.universityMarks}</td>
-                      <td className="border px-4 py-2">{subject.twMarks}</td>
-                      <td className="border px-4 py-2">{subject.passFail}</td>
-                      <td className="border px-4 py-2">{subject.cgpa}</td>
-                      <td className="border px-4 py-2">{subject.certificate?.name}</td>
-                      <td className="border px-4 py-2">
-                        <button
-                          className="text-blue-600 mr-2"
-                          onClick={() => handleEdit(index)}
-                        >
-                          <FaEdit />
-                        </button>
-                        <button
-                          className="text-red-600"
-                          onClick={() => handleDelete(index)}
-                        >
-                          <FaTrash />
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+              {Object.entries(semesterSubjects).map(([semester, subjects]) => (
+                <div key={semester} className="mb-6">
+                  <h3 className="text-lg font-medium text-gray-700 mb-2">
+                    Subject Details for Semester {semester}
+                  </h3>
+                  <table className="min-w-full bg-white shadow-md rounded-lg">
+                    <thead>
+                      <tr>
+                        <th className="border px-4 py-2">Subject Name</th>
+                        <th className="border px-4 py-2">Oral Marks</th>
+                        <th className="border px-4 py-2">University Marks</th>
+                        <th className="border px-4 py-2">TW Marks</th>
+                        <th className="border px-4 py-2">Pass/Fail</th>
+                        <th className="border px-4 py-2">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {subjects.map((subject, index) => (
+                        <tr key={index}>
+                          <td className="border px-4 py-2">{subject.subjectName}</td>
+                          <td className="border px-4 py-2">{subject.oralMarks}</td>
+                          <td className="border px-4 py-2">{subject.universityMarks}</td>
+                          <td className="border px-4 py-2">{subject.twMarks}</td>
+                          <td className="border px-4 py-2">{subject.passFail}</td>
+                          <td className="border px-4 py-2">
+                            <button onClick={() => handleEdit(semester, index)} className="text-blue-600">
+                              <FaEdit />
+                            </button>
+                            <button onClick={() => handleDelete(semester, index)} className="text-red-600 ml-2">
+                              <FaTrash />
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              ))}
             </div>
           )}
+
+          {/* Submit Button */}
+          <div className="flex justify-center">
+              <button
+                type="submit"
+                className="bg-gray-800 text-white rounded-full font-semibold px-4 py-2 md-3rounded-md shadow-sm hover:bg-gray-400"
+              >
+                Submit
+              </button>
+          </div>
         </div>
       </div>
     </>

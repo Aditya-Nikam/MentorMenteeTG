@@ -18,38 +18,116 @@ const StudentD = () => {
     permanentAddress: "",
   });
 
+  const [errors, setErrors] = useState({});
+
   useEffect(() => {
     const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
     if (loggedInUser && loggedInUser.email) {
-      formData.email = loggedInUser.email
+      setFormData((prevData) => ({ ...prevData, email: loggedInUser.email }));
     }
     const studentDetails = JSON.parse(localStorage.getItem("studentDetails"));
-    if(studentDetails){
-      setFormData(studentDetails)
+    if (studentDetails) {
+      setFormData(studentDetails);
     }
   }, []);
+  
 
+  // Handle form field changes
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
+  // Validate form fields
+  const validate = () => {
+    let formErrors = {};
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Email validation regex
+    const mobilePattern = /^[0-9]{10}$/; // Mobile number should be 10 digits
+    const namePattern = /^[a-zA-Z\s]*$/; // Only allow alphabetic characters
+
+    // Full Name validation
+    if (!formData.name) {
+      formErrors.name = "Full Name is required";
+    } else if (!namePattern.test(formData.name)) {
+      formErrors.name = "Full Name should only contain alphabets";
+    }
+
+    // Gender validation
+    if (!formData.gender) {
+      formErrors.gender = "Gender is required";
+    }
+
+    // Date of Birth validation
+    if (!formData.dob) {
+      formErrors.dob = "Date of Birth is required";
+    }
+
+    // Admission Year validation
+    if (!formData.admissionYear) {
+      formErrors.admissionYear = "Admission Year is required";
+    }
+
+    // Program validation
+    if (!formData.program) {
+      formErrors.program = "Program is required";
+    }
+
+    // Department validation
+    if (!formData.department) {
+      formErrors.department = "Department is required";
+    }
+
+    // Mobile number validation
+    if (!formData.mobileNumber) {
+      formErrors.mobileNumber = "Mobile Number is required";
+    } else if (!mobilePattern.test(formData.mobileNumber)) {
+      formErrors.mobileNumber = "Please enter a valid 10-digit mobile number";
+    }
+
+    // Current Address validation
+    if (!formData.currentAddress) {
+      formErrors.currentAddress = "Current Address is required";
+    }
+
+    // Permanent Address validation
+    if (!formData.permanentAddress) {
+      formErrors.permanentAddress = "Permanent Address is required";
+    }
+
+    setErrors(formErrors);
+    return Object.keys(formErrors).length === 0;
+  };
+
+  // Handle form submission
   const handleSubmit = (e) => {
     e.preventDefault();
-    localStorage.setItem("studentDetails", JSON.stringify(formData));
-    console.log("Form data submitted:", formData);
-    navigate("/ParentD")
+
+    if (validate()) {
+      // Save form data to localStorage
+      localStorage.setItem("studentDetails", JSON.stringify(formData));
+
+      // Alert message
+      alert("Details successfully submitted!");
+
+      // Log form data to console
+      console.log("Form data submitted:", formData);
+
+      // Navigate to ParentD page
+      navigate("/ParentD");
+    } else {
+      alert("Please correct the errors in the form");
+    }
   };
 
   return (
     <div className="min-h-screen bg-gray-100">
       <Navbars />
-      <div className="flex flex-col min-h-screen bg-gray-100">
-        
-        <div className="flex-grow flex items-center justify-center p-20">
-
+      <div className="flex flex-col min-h-screen bg-gray-100 ">
+        <div className="flex-grow flex items-center justify-center p-20 ">
           <div className="bg-white border p-10 shadow-2xl w-full max-w-4xl relative">
-            <h1 className="text-2xl font-bold font-serif text-black text-left mb-6">Student Details</h1>
+            <h1 className="text-2xl font-bold text-black text-left mb-6">
+              Student Details
+            </h1>
             {/*Arrow*/}
             <div className="absolute top-4 right-10">
               <Link to="/ParentD">
@@ -69,9 +147,9 @@ const StudentD = () => {
                     name="name"
                     value={formData.name}
                     onChange={handleChange}
-                    required
                     className="mt-1 block w-full px-3 py-2 border border-gray-600 rounded-md shadow-sm focus:outline-none sm:text-sm"
                   />
+                  {errors.name && <p className="text-red-500 text-xs">{errors.name}</p>}
                 </div>
                 <div>
                   <label htmlFor="gender" className="block text-sm font-medium text-gray-700">
@@ -82,7 +160,6 @@ const StudentD = () => {
                     name="gender"
                     value={formData.gender}
                     onChange={handleChange}
-                    required
                     className="mt-1 block w-full px-3 py-2 border border-gray-700 rounded-md shadow-sm"
                   >
                     <option value="">Select Gender</option>
@@ -90,6 +167,7 @@ const StudentD = () => {
                     <option value="Male">Male</option>
                     <option value="Other">Other</option>
                   </select>
+                  {errors.gender && <p className="text-red-500 text-xs">{errors.gender}</p>}
                 </div>
                 <div>
                   <label htmlFor="dob" className="block text-sm font-medium text-gray-700">
@@ -101,13 +179,13 @@ const StudentD = () => {
                     name="dob"
                     value={formData.dob}
                     onChange={handleChange}
-                    required
                     className="mt-1 block w-full px-3 py-2 border border-gray-600 rounded-md shadow-sm focus:outline-none sm:text-sm"
                   />
+                  {errors.dob && <p className="text-red-500 text-xs">{errors.dob}</p>}
                 </div>
               </div>
 
-              {/* Row 2: Admission Year, Department, Program */}
+              {/* Row 2: Admission Year, Program, Department */}
               <div className="grid grid-cols-3 gap-4">
                 <div>
                   <label htmlFor="admissionYear" className="block text-sm font-medium text-gray-700">
@@ -119,27 +197,9 @@ const StudentD = () => {
                     name="admissionYear"
                     value={formData.admissionYear}
                     onChange={handleChange}
-                    required
                     className="mt-1 block w-full px-3 py-2 border border-gray-600 rounded-md shadow-sm focus:outline-none sm:text-sm"
                   />
-                </div>
-                <div>
-                  <label htmlFor="department" className="block text-sm font-medium text-gray-700">
-                    Department
-                  </label>
-                  <select
-                    id="department"
-                    name="department"
-                    value={formData.department}
-                    onChange={handleChange}
-                    required
-                    className="mt-1 block w-full px-3 py-2 border border-gray-700 rounded-md shadow-sm"
-                  >
-                    <option value="">Select Department</option>
-                    <option value="Computer Science">Computer Science</option>
-                    <option value="Information Technology">Information Technology</option>
-                    <option value="Artificial Intelligence & Data Science">Artificial Intelligence & Data Science</option>
-                  </select>
+                  {errors.admissionYear && <p className="text-red-500 text-xs">{errors.admissionYear}</p>}
                 </div>
                 <div>
                   <label htmlFor="program" className="block text-sm font-medium text-gray-700">
@@ -150,7 +210,6 @@ const StudentD = () => {
                     name="program"
                     value={formData.program}
                     onChange={handleChange}
-                    required
                     className="mt-1 block w-full px-3 py-2 border border-gray-700 rounded-md shadow-sm"
                   >
                     <option value="">Select Program</option>
@@ -159,6 +218,27 @@ const StudentD = () => {
                     <option value="TE">TE</option>
                     <option value="BE">BE</option>
                   </select>
+                  {errors.program && <p className="text-red-500 text-xs">{errors.program}</p>}
+                </div>
+                <div>
+                  <label htmlFor="department" className="block text-sm font-medium text-gray-700">
+                    Department
+                  </label>
+                  <select
+                    id="department"
+                    name="department"
+                    value={formData.department}
+                    onChange={handleChange}
+                    className="mt-1 block w-full px-3 py-2 border border-gray-700 rounded-md shadow-sm"
+                  >
+                    <option value="">Select Department</option>
+                    <option value="Computer Science">Computer Science</option>
+                    <option value="Information Technology">Information Technology</option>
+                    <option value="Artificial Intelligence & Data Science">
+                      Artificial Intelligence & Data Science
+                    </option>
+                  </select>
+                  {errors.department && <p className="text-red-500 text-xs">{errors.department}</p>}
                 </div>
               </div>
 
@@ -166,7 +246,7 @@ const StudentD = () => {
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                    Email-ID
+                    Email
                   </label>
                   <input
                     type="email"
@@ -174,8 +254,8 @@ const StudentD = () => {
                     name="email"
                     value={formData.email}
                     onChange={handleChange}
-                    required
-                    className="mt-1 block w-full px-3 py-2 border border-gray-600 rounded-md shadow-sm sm:text-sm"
+                    readOnly
+                    className="mt-1 block w-full px-3 py-2 border border-gray-600 rounded-md shadow-sm bg-gray-100 focus:outline-none sm:text-sm"
                   />
                 </div>
                 <div>
@@ -183,14 +263,14 @@ const StudentD = () => {
                     Mobile Number
                   </label>
                   <input
-                    type="number"
+                    type="text"
                     id="mobileNumber"
                     name="mobileNumber"
                     value={formData.mobileNumber}
                     onChange={handleChange}
-                    required
-                    className="mt-1 block w-full px-3 py-2 border border-gray-600 rounded-md shadow-sm sm:text-sm"
+                    className="mt-1 block w-full px-3 py-2 border border-gray-600 rounded-md shadow-sm focus:outline-none sm:text-sm"
                   />
+                  {errors.mobileNumber && <p className="text-red-500 text-xs">{errors.mobileNumber}</p>}
                 </div>
               </div>
 
@@ -205,9 +285,9 @@ const StudentD = () => {
                     name="currentAddress"
                     value={formData.currentAddress}
                     onChange={handleChange}
-                    required
-                    className="mt-1 block w-full px-3 py-2 border border-gray-600 rounded-md shadow-sm sm:text-sm"
+                    className="mt-1 block w-full px-3 py-2 border border-gray-600 rounded-md shadow-sm focus:outline-none sm:text-sm"
                   />
+                  {errors.currentAddress && <p className="text-red-500 text-xs">{errors.currentAddress}</p>}
                 </div>
                 <div>
                   <label htmlFor="permanentAddress" className="block text-sm font-medium text-gray-700">
@@ -218,18 +298,21 @@ const StudentD = () => {
                     name="permanentAddress"
                     value={formData.permanentAddress}
                     onChange={handleChange}
-                    required
-                    className="mt-1 block w-full px-3 py-2 border border-gray-600 rounded-md shadow-sm sm:text-sm"
+                    className="mt-1 block w-full px-3 py-2 border border-gray-600 rounded-md shadow-sm focus:outline-none sm:text-sm"
                   />
+                  {errors.permanentAddress && <p className="text-red-500 text-xs">{errors.permanentAddress}</p>}
                 </div>
               </div>
 
-              <button
-                type="submit"
-                className="bg-cyan-400 text-white px-4 justify-center py-2 rounded-md shadow-sm hover:bg-cyan-700 "
-              >
-                Submit
-              </button>
+              {/* Submit Button */}
+              <div className="text-center">
+                <button
+                  type="submit"
+                  className="bg-gray-700 text-white px-6 py-2 rounded-full font-semibold hover:bg-gray-400"
+                >
+                  Submit
+                </button>
+              </div>
             </form>
           </div>
         </div>

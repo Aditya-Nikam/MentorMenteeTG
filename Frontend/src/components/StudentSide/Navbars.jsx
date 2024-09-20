@@ -5,7 +5,6 @@ const Navbars = () => {
   const [profileDropdown, setProfileDropdown] = useState(false);
   const [resultDropdown, setResultDropdown] = useState(false);
   const [achievementsDropdown, setAchievementsDropdown] = useState(false);
-  const [higherStudiesDropdown, setHigherStudiesDropdown] = useState(false);
 
   useEffect(() => {
     const closeDropdowns = (e) => {
@@ -13,7 +12,6 @@ const Navbars = () => {
         setProfileDropdown(false);
         setResultDropdown(false);
         setAchievementsDropdown(false);
-        setHigherStudiesDropdown(false);
       }
     };
     document.addEventListener("click", closeDropdowns);
@@ -21,21 +19,19 @@ const Navbars = () => {
   }, []);
 
   const handleDropdownClick = (e, dropdownSetter) => {
-    e.stopPropagation(); // Prevent closing the dropdown when clicking inside
+    e.stopPropagation();
     dropdownSetter((prev) => !prev);
   };
 
   return (
-    <div className="bg-gray-100 shadow-md">
-      {" "}
-      {/* Changed background color */}
+    <div className="bg-gray-800 shadow-md">
       <div className="container mx-auto flex items-center justify-between p-4">
+        
         {/* Logo and Header */}
         <div className="flex items-center">
           <img src="/src/assets/logo.png" className="h-12 w-12" />
           <div className="ml-4 text-3xl font-bold flex items-center">
-            <span className="text-black">Ment</span> {/* Changed text color */}
-            <span className="text-black">ee</span> {/* Changed text color */}
+            <span className="text-white">Mentee</span> 
           </div>
         </div>
 
@@ -44,13 +40,13 @@ const Navbars = () => {
           <div className="flex items-center justify-end space-x-7">
             <Link
               to="/Sdashboard"
-              className="text-sm font-semibold text-black hover:text-blue-400"
+              className="text-sm font-semibold text-white hover:text-gray-400"
             >
               Home
             </Link>
             <Link
               to="/StudentD"
-              className="text-sm font-semibold text-black hover:text-blue-400"
+              className="text-sm font-semibold text-white hover:text-gray-400"
             >
               Personal Details
             </Link>
@@ -59,7 +55,7 @@ const Navbars = () => {
             <div className="relative">
               <button
                 onClick={(e) => handleDropdownClick(e, setResultDropdown)}
-                className="dropdown-button font-semibold text-sm text-black hover:text-blue-400"
+                className="dropdown-button font-semibold text-sm text-white hover:text-gray-400"
               >
                 Result
               </button>
@@ -67,13 +63,13 @@ const Navbars = () => {
                 <div className="absolute bg-white shadow-lg rounded-md z-10">
                   <Link
                     to="/PYDetails"
-                    className="block px-4 py-2 text-sm text-black hover:bg-blue-200"
+                    className="block px-4 py-2 text-sm text-gray-800 hover:opacity-70"
                   >
                     Previous Details
                   </Link>
                   <Link
                     to="/CurrentD"
-                    className="block px-4 py-2 text-sm text-black hover:bg-blue-200"
+                    className="block px-4 py-2 text-sm text-gray-800 hover:opacity-70"
                   >
                     Current Details
                   </Link>
@@ -84,7 +80,7 @@ const Navbars = () => {
             {/* Internships Link */}
             <Link
               to="/Internships"
-              className="text-sm font-semibold text-black hover:text-blue-400"
+              className="text-sm font-semibold text-white hover:text-gray-400"
             >
               Internships
             </Link>
@@ -93,81 +89,55 @@ const Navbars = () => {
             <div className="relative">
               <button
                 onClick={(e) => handleDropdownClick(e, setAchievementsDropdown)}
-                className="dropdown-button text-sm font-semibold text-black hover:text-blue-400"
+                className="dropdown-button text-sm font-semibold text-white hover:text-gray-400"
               >
                 Achievements
               </button>
               {achievementsDropdown && (
-                <div className="absolute bg-white shadow-lg rounded-md z-10">
+                <div className="absolute bg-white  py-2 px-7 shadow-lg rounded-md z-10">
                   <Link
-                    to="#"
-                    className="block px-4 py-2 text-sm text-black hover:bg-blue-200"
+                    to="/Cocurriact"
+                    className="block px-0 py-2 text-sm text-gray-800 hover:opacity-70"
                   >
-                    Co-curricular Activities
+                    Cocurricular Activities
                   </Link>
                   <Link
-                    to="#"
-                    className="block px-4 py-2 text-sm text-black hover:bg-blue-200"
+                    to="/Extracurriact"
+                    className="block px-0 py-2 text-sm text-gray-800 hover:opacity-70"
                   >
-                    Extra-curricular Activities
+                    Extracurricular Activities
                   </Link>
                 </div>
               )}
             </div>
 
-            {/* Higher Studies Dropdown */}
-            <div className="relative">
-              <button
-                onClick={(e) =>
-                  handleDropdownClick(e, setHigherStudiesDropdown)
-                }
-                className="dropdown-button text-sm font-semibold text-black hover:text-blue-400"
-              >
-                Higher Studies
-              </button>
-              {higherStudiesDropdown && (
-                <div className="absolute bg-white shadow-lg rounded-md z-10">
-                  <Link
-                    to="#"
-                    className="block px-4 py-2 text-sm text-black hover:bg-blue-200"
-                  >
-                    Entrepreneurship
-                  </Link>
-                  <Link
-                    to="#"
-                    className="block px-4 py-2 text-sm text-black hover:bg-blue-200"
-                  >
-                    Higher Studies
-                  </Link>
-                  <Link
-                    to="#"
-                    className="block px-4 py-2 text-sm text-black hover:bg-blue-200"
-                  >
-                    Placements
-                  </Link>
-                </div>
-              )}
-            </div>
+            {/* Career Pathways Link (Changed from Dropdown) */}
+            <Link
+              to="/CareerPath"
+              className="text-sm font-semibold text-white hover:text-gray-400"
+            >
+              Career Pathways
+            </Link>
 
             {/* Profile Dropdown */}
             <div className="relative">
               <button
                 onClick={(e) => handleDropdownClick(e, setProfileDropdown)}
-                className="dropdown-button text-lg bg-blue-200 text-black font-semibold px-4 py-2 rounded-md hover:bg-blue-500"
+                className="dropdown-button text-lg bg-white text-gray-800 font-semibold px-4 py-2 rounded-md hover:opacity-50 hover:bg-gray-400"
               >
                 Profile
               </button>
               {profileDropdown && (
                 <div className="absolute bg-white py-2 shadow-lg rounded-md z-10">
                   <Link
-                    to="#"
-                    className="block px-4 py-2 text-sm text-black hover:bg-blue-200"
+                    to="/StudentD"
+                    className="block px-4 py-2 text-sm text-gray-800 hover:opacity-50"
                   >
                     Edit Profile
                   </Link>
                   <Link
                     to="#"
-                    className="block px-4 py-2 text-sm text-black hover:bg-blue-200"
+                    className="block px-4 py-2 text-sm text-gray-800 hover:opacity-70"
                   >
                     Logout
                   </Link>

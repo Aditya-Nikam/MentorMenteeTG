@@ -1,8 +1,9 @@
 import { useState } from "react";
-import { FaEdit, FaTrash } from "react-icons/fa"; // Import icons
+import { FaEdit, FaTrash } from "react-icons/fa";
 import Navbars from "../Navbars";
 
 const Internships = () => {
+  // Form data state
   const [formData, setFormData] = useState({
     companyName: "",
     jobProfile: "",
@@ -12,21 +13,67 @@ const Internships = () => {
     certificate: null,
   });
 
-  const [internshipRecords, setInternshipRecords] = useState([]);
+  // Error state
+  const [errors, setErrors] = useState({});
 
+  // Internships list state
+  const [internships, setInternships] = useState([]);
+
+  // Index for editing an internship, null if not editing
+  const [editingIndex, setEditingIndex] = useState(null);
+
+  // Handle form input change
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    const { name, value, files } = e.target;
+    if (name === "certificate") {
+      setFormData({ ...formData, certificate: files[0] });
+    } else {
+      setFormData({ ...formData, [name]: value });
+    }
   };
 
-  const handleCertificateChange = (e) => {
-    setFormData({ ...formData, certificate: e.target.files[0] });
+  // Validate form data
+  const validate = () => {
+    const newErrors = {};
+    if (!formData.companyName || typeof formData.companyName !== "string") {
+      newErrors.companyName = "Company name is required and must be a valid string.";
+    }
+    if (!formData.jobProfile || typeof formData.jobProfile !== "string") {
+      newErrors.jobProfile = "Job profile is required and must be a valid string.";
+    }
+    if (!formData.startDate) {
+      newErrors.startDate = "Start date is required.";
+    }
+    if (!formData.endDate) {
+      newErrors.endDate = "End date is required.";
+    }
+    if (!formData.stipend || formData.stipend <= 0) {
+      newErrors.stipend = "Stipend must be a positive number.";
+    }
+    return newErrors;
   };
 
-  const handleAddRecord = () => {
-    // Add the form data to the internshipRecords array
-    setInternshipRecords([...internshipRecords, { ...formData }]);
-    // Reset form data after submission
+  // Handle adding or updating an internship
+  const handleAddOrUpdate = () => {
+    const validationErrors = validate();
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      return;
+    }
+
+    if (editingIndex === null) {
+      // Add new internship
+      setInternships([...internships, formData]);
+      alert("Internship added successfully!"); // Alert for adding
+    } else {
+      // Update existing internship
+      const updatedInternships = [...internships];
+      updatedInternships[editingIndex] = formData;
+      setInternships(updatedInternships);
+      alert("Internship updated successfully!"); // Alert for updating
+    }
+
+    // Reset the form and clear the editing index
     setFormData({
       companyName: "",
       jobProfile: "",
@@ -35,215 +82,197 @@ const Internships = () => {
       stipend: "",
       certificate: null,
     });
+    setEditingIndex(null);
+    setErrors({});
   };
 
-  const handleDeleteRecord = (index) => {
-    // Delete a specific record by index
-    setInternshipRecords(internshipRecords.filter((_, i) => i !== index));
+  // Handle deleting an internship
+  const handleDelete = (index) => {
+    const updatedInternships = internships.filter((_, i) => i !== index);
+    setInternships(updatedInternships);
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    handleAddRecord(); // Add record to the list
+  // Handle editing an internship, pre-filling the form
+  const handleEdit = (index) => {
+    const internship = internships[index];
+    setFormData(internship);
+    setEditingIndex(index);
+    setErrors({});
   };
 
   return (
     <>
       <Navbars />
-      <div className="min-h-screen bg-gray-100 p-2">
-        <div className="flex items-center justify-center min-h-screen">
-          <div className="bg-white border m-3 p-9 shadow-2xl w-full max-w-3xl relative">
-            <h1 className="text-2xl font-bold font-serif text-black text-left mb-6">
-              Internship Details
-            </h1>
+      <div className="min-h-screen bg-gray-100 p-5">
+        <div className="bg-white border p-10 shadow-2xl w-full max-xl mx-auto">
+          <h1 className="text-2xl font-bold text-black text-left mb-6">
+            Internship Details
+          </h1>
 
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {/* Company Name */}
-                <div>
-                  <label
-                    htmlFor="companyName"
-                    className="block text-sm font-medium text-gray-700"
-                  >
-                    Company Name
-                  </label>
-                  <input
-                    type="text"
-                    id="companyName"
-                    name="companyName"
-                    value={formData.companyName}
-                    onChange={handleChange}
-                    required
-                    className="mt-1 block w-full px-3 py-2 border border-gray-600 rounded-md shadow-sm sm:text-sm"
-                  />
-                </div>
-
-                {/* Job Profile */}
-                <div>
-                  <label
-                    htmlFor="jobProfile"
-                    className="block text-sm font-medium text-gray-700"
-                  >
-                    Job Profile
-                  </label>
-                  <input
-                    type="text"
-                    id="jobProfile"
-                    name="jobProfile"
-                    value={formData.jobProfile}
-                    onChange={handleChange}
-                    required
-                    className="mt-1 block w-full px-3 py-2 border border-gray-600 rounded-md shadow-sm sm:text-sm"
-                  />
-                </div>
+          {/* Form */}
+          <form className="space-y-4">
+            <div className="flex flex-wrap gap-4">
+              {/* Company Name */}
+              <div className="flex-1 min-w-[150px]">
+                <label htmlFor="companyName" className="block text-sm font-medium text-gray-700">
+                  Company Name
+                </label>
+                <input
+                  type="text"
+                  id="companyName"
+                  name="companyName"
+                  value={formData.companyName}
+                  onChange={handleChange}
+                  required
+                  className={`mt-1 block w-full px-3 py-2 border ${errors.companyName ? 'border-red-500' : 'border-gray-700'} rounded-md shadow-sm`}
+                />
+                {errors.companyName && <p className="text-red-500 text-xs">{errors.companyName}</p>}
               </div>
 
-              {/* Start Date and End Date in a row */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <label
-                    htmlFor="startDate"
-                    className="block text-sm font-medium text-gray-700"
-                  >
-                    Start Date
-                  </label>
-                  <input
-                    type="date"
-                    id="startDate"
-                    name="startDate"
-                    value={formData.startDate}
-                    onChange={handleChange}
-                    required
-                    className="mt-1 block w-full px-3 py-2 border border-gray-600 rounded-md shadow-sm sm:text-sm"
-                  />
-                </div>
-
-                <div>
-                  <label
-                    htmlFor="endDate"
-                    className="block text-sm font-medium text-gray-700"
-                  >
-                    End Date
-                  </label>
-                  <input
-                    type="date"
-                    id="endDate"
-                    name="endDate"
-                    value={formData.endDate}
-                    onChange={handleChange}
-                    required
-                    className="mt-1 block w-full px-3 py-2 border border-gray-600 rounded-md shadow-sm sm:text-sm"
-                  />
-                </div>
+              {/* Job Profile */}
+              <div className="flex-1 min-w-[150px]">
+                <label htmlFor="jobProfile" className="block text-sm font-medium text-gray-700">
+                  Job Profile
+                </label>
+                <input
+                  type="text"
+                  id="jobProfile"
+                  name="jobProfile"
+                  value={formData.jobProfile}
+                  onChange={handleChange}
+                  required
+                  className={`mt-1 block w-full px-3 py-2 border ${errors.jobProfile ? 'border-red-500' : 'border-gray-700'} rounded-md shadow-sm`}
+                />
+                {errors.jobProfile && <p className="text-red-500 text-xs">{errors.jobProfile}</p>}
               </div>
 
-              {/* Stipend and Certificate Upload in a row */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <label
-                    htmlFor="stipend"
-                    className="block text-sm font-medium text-gray-700"
-                  >
-                    Stipend
-                  </label>
-                  <select
-                    id="stipend"
-                    name="stipend"
-                    value={formData.stipend}
-                    onChange={handleChange}
-                    required
-                    className="mt-1 block w-full px-3 py-2 border border-gray-600 rounded-md shadow-sm sm:text-sm"
-                  >
-                    <option value="Yes">Yes</option>
-                    <option value="No">No</option>
-                  </select>
-                </div>
-
-                <div>
-                  <label
-                    htmlFor="certificate"
-                    className="block text-sm font-medium text-gray-700"
-                  >
-                    Upload Certificate
-                  </label>
-                  <input
-                    type="file"
-                    id="certificate"
-                    name="certificate"
-                    onChange={handleCertificateChange}
-                    className="mt-1 block w-full px-3 py-2 border border-gray-600 rounded-md shadow-sm sm:text-sm"
-                  />
-                </div>
+              {/* Start Date */}
+              <div className="flex-1 min-w-[150px]">
+                <label htmlFor="startDate" className="block text-sm font-medium text-gray-700">
+                  Start Date
+                </label>
+                <input
+                  type="date"
+                  id="startDate"
+                  name="startDate"
+                  value={formData.startDate}
+                  onChange={handleChange}
+                  required
+                  className={`mt-1 block w-full px-3 py-2 border ${errors.startDate ? 'border-red-500' : 'border-gray-700'} rounded-md shadow-sm`}
+                />
+                {errors.startDate && <p className="text-red-500 text-xs">{errors.startDate}</p>}
               </div>
 
-              {/* Buttons */}
-              <div className="flex justify-between mt-6 space-x-2">
-                <button
-                  type="button"
-                  onClick={handleAddRecord}
-                  className="bg-blue-800 text-white py-2 px-4 rounded-md shadow-sm hover:bg-blue-600 w-half"
-                >
-                  Add Details
-                </button>
+              {/* End Date */}
+              <div className="flex-1 min-w-[150px]">
+                <label htmlFor="endDate" className="block text-sm font-medium text-gray-700">
+                  End Date
+                </label>
+                <input
+                  type="date"
+                  id="endDate"
+                  name="endDate"
+                  value={formData.endDate}
+                  onChange={handleChange}
+                  required
+                  className={`mt-1 block w-full px-3 py-2 border ${errors.endDate ? 'border-red-500' : 'border-gray-700'} rounded-md shadow-sm`}
+                />
+                {errors.endDate && <p className="text-red-500 text-xs">{errors.endDate}</p>}
               </div>
 
-              <div className="flex justify-center mt-2">
-                <button
-                  type="submit"
-                  className="bg-cyan-400 text-white py-2 px-4 rounded-md shadow-sm hover:bg-cyan-600 w-full"
-                >
-                  Submit
-                </button>
+              {/* Stipend */}
+              <div className="flex-1 min-w-[150px]">
+                <label htmlFor="stipend" className="block text-sm font-medium text-gray-700">
+                  Stipend
+                </label>
+                <input
+                  type="number"
+                  id="stipend"
+                  name="stipend"
+                  value={formData.stipend}
+                  onChange={handleChange}
+                  required
+                  className={`mt-1 block w-full px-3 py-2 border ${errors.stipend ? 'border-red-500' : 'border-gray-700'} rounded-md shadow-sm`}
+                />
+                {errors.stipend && <p className="text-red-500 text-xs">{errors.stipend}</p>}
               </div>
-            </form>
 
-            {/* Display all records */}
-            {internshipRecords.length > 0 && (
-              <div className="mt-8">
-                <h3 className="text-lg font-medium text-gray-700 mb-2">
-                  Internship Records
-                </h3>
-                <div className="overflow-x-auto">
-                  <table className="min-w-full bg-white shadow-md rounded-lg text-sm">
-                    <thead>
-                      <tr>
-                        <th className="border px-4 py-2">Company Name</th>
-                        <th className="border px-4 py-2">Job Profile</th>
-                        <th className="border px-4 py-2">Start Date</th>
-                        <th className="border px-4 py-2">End Date</th>
-                        <th className="border px-4 py-2">Stipend</th>
-                        <th className="border px-4 py-2">Certificate</th>
-                        <th className="border px-4 py-2">Actions</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {internshipRecords.map((record, index) => (
-                        <tr key={index}>
-                          <td className="border px-4 py-2">{record.companyName}</td>
-                          <td className="border px-4 py-2">{record.jobProfile}</td>
-                          <td className="border px-4 py-2">{record.startDate}</td>
-                          <td className="border px-4 py-2">{record.endDate}</td>
-                          <td className="border px-4 py-2">{record.stipend}</td>
-                          <td className="border px-4 py-2">
-                            {record.certificate ? record.certificate.name : "No Certificate"}
-                          </td>
-                          <td className="border px-4 py-2">
-                            <div className="flex space-x-2">
-                              <FaEdit className="text-yellow-500 cursor-pointer" />
-                              <FaTrash
-                                className="text-red-500 cursor-pointer"
-                                onClick={() => handleDeleteRecord(index)}
-                              />
-                            </div>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
+              {/* Certificate Upload */}
+              <div className="flex-1 min-w-[150px]">
+                <label htmlFor="certificate" className="block text-sm font-medium text-gray-700">
+                  Upload Certificate
+                </label>
+                <input
+                  type="file"
+                  id="certificate"
+                  name="certificate"
+                  onChange={handleChange}
+                  className="mt-1 block w-full px-3 py-2 border border-gray-700 rounded-md shadow-sm"
+                />
               </div>
-            )}
-          </div>
+            </div>
+
+            {/* Add/Update Button */}
+            <button
+              type="button"
+              onClick={handleAddOrUpdate}
+              className="bg-blue-800 text-white py-2 px-4 rounded-md shadow-sm hover:bg-blue-800 mt-4"
+            >
+              {editingIndex === null ? "Add Internship" : "Update Internship"}
+            </button>
+
+            {/* Submit Button */}
+        
+            <div className="flex justify-center mt-4">
+              <button
+                type="submit"
+                className="bg-gray-800 text-white rounded-full font-semibold px-4 py-2 shadow-sm hover:bg-gray-600"
+              >
+                Submit
+              </button>
+            </div>
+          </form>
+
+          {/* Table to display internships */}
+          {internships.length > 0 && (
+            <div className="mt-8">
+              <h3 className="text-lg font-medium text-gray-700 mb-2">Internship Details</h3>
+              <table className="min-w-full bg-white shadow-md rounded-lg">
+                <thead>
+                  <tr>
+                    <th className="border px-4 py-2">Company Name</th>
+                    <th className="border px-4 py-2">Job Profile</th>
+                    <th className="border px-4 py-2">Start Date</th>
+                    <th className="border px-4 py-2">End Date</th>
+                    <th className="border px-4 py-2">Stipend</th>
+                    <th className="border px-4 py-2">Certificate</th>
+                    <th className="border px-4 py-2">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {internships.map((internship, index) => (
+                    <tr key={index}>
+                      <td className="border px-4 py-2">{internship.companyName}</td>
+                      <td className="border px-4 py-2">{internship.jobProfile}</td>
+                      <td className="border px-4 py-2">{internship.startDate}</td>
+                      <td className="border px-4 py-2">{internship.endDate}</td>
+                      <td className="border px-4 py-2">{internship.stipend}</td>
+                      <td className="border px-4 py-2">{internship.certificate ? internship.certificate.name : "N/A"}</td>
+                      <td className="border px-4 py-2">
+                        <button onClick={() => handleEdit(index)} className="text-yellow-500 hover:text-yellow-700">
+                          <FaEdit />
+                        </button>
+                        <button onClick={() => handleDelete(index)} className="text-red-500 hover:text-red-700 ml-2">
+                          <FaTrash />
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            
+          )}
         </div>
       </div>
     </>
