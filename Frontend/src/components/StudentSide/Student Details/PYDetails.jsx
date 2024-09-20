@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { FaArrowLeft } from "react-icons/fa";
 import Navbars from "../Navbars"; // Import Navbars component
 import axios from 'axios';
@@ -20,6 +20,12 @@ const PYDetails = () => {
   });
 
   const [errors, setErrors] = useState({}); // State for validation errors
+  useEffect(() => {
+    const pydetails = JSON.parse(localStorage.getItem("pydetails"));
+    if (pydetails) {
+      setFormData(pydetails);
+    }
+  }, []);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -41,16 +47,11 @@ const PYDetails = () => {
     if (!formData.tenthMarks) validationErrors.tenthMarks = "Total Marks is required.";
     if (!formData.tenthPercentage) validationErrors.tenthPercentage = "Percentage is required.";
     if (!formData.tenthPassingYear) validationErrors.tenthPassingYear = "Passing Year is required.";
-    if (!formData.twelfthMarks) validationErrors.twelfthMarks = "Total Marks is required.";
-    if (!formData.twelfthPercentage) validationErrors.twelfthPercentage = "Percentage is required.";
-    if (!formData.twelfthPassingYear) validationErrors.twelfthPassingYear = "Passing Year is required.";
-    if (!formData.diplomaMarks) validationErrors.diplomaMarks = "Total Marks is required.";
-    if (!formData.diplomaPercentage) validationErrors.diplomaPercentage = "Percentage is required.";
-    if (!formData.diplomaPassingYear) validationErrors.diplomaPassingYear = "Passing Year is required.";
     return validationErrors;
   };
 
   const handleSubmit = async(e) => {
+
     e.preventDefault();
     const validationErrors = validate();
     
@@ -59,12 +60,14 @@ const PYDetails = () => {
       return; // Prevent submission if there are validation errors
     }
 
+    
 
     const formData1 = new FormData();
     formData1.append("email", JSON.parse(localStorage.getItem("loggedInUser")).email);
-    formData1.append("file", formData.certificates.tenth)
-    formData1.append("file", formData.certificates.twelfth)
-    formData1.append("file", formData.certificates.diploma)
+    formData1.append("tenthMarksheet", formData.certificates.tenth)
+    formData1.append("twelfthMarksheet", formData.certificates.twelfth)
+    formData1.append("diplomaMarsheet", formData.certificates.diploma)
+    formData1.append("gapCertificate", formData.gapCertificate);
     console.log(formData.certificates.tenth)
     
     try {
@@ -73,24 +76,19 @@ const PYDetails = () => {
           'Content-Type': 'multipart/form-data',
         },
       });
-      alert('Files successfully uploaded!');
+      // alert('Files successfully uploaded!');
     } catch (error) {
       console.error('Error uploading files:', error);
       alert('Failed to upload files.');
     }
-    alert("Form submitted successfully!");
-    // Save form data to local storage
-    // localStorage.setItem("parentDetails", JSON.stringify(formData));
-    
-    // Display alert message
-    alert("Details successfully submitted!");
+    localStorage.setItem("pydetails",JSON.stringify(formData));
   };
 
   return (
     <div className=" bg-gray-100">
       <Navbars />
-      <div className="flex items-center justify-center">
-        <div className="bg-white border p-20 shadow-2xl w-full ">
+      <div className="flex items-center justify-center ">
+        <div className="bg-white border p-20 shadow-2xl w-4/5">
           <h1 className="text-2xl font-bold text-black mb-6">Previous Years Details</h1>
 
           <form className="space-y-8" onSubmit={handleSubmit}>

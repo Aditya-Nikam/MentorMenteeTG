@@ -24,7 +24,7 @@ const storage = multer.diskStorage({
     return cb(null,uploadPath);
   },
   filename: function(req, file, cb){
-    return cb(null, `${Date.now()}_${file.originalname}`);
+    return cb(null, `${file.fieldname}_${Date.now()}_${file.originalname}`);
   }
 })
 
@@ -36,12 +36,19 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: true }));
 
+const uploads = upload.fields([
+  { name: 'tenthMarksheet', maxCount: 1 },
+  { name: 'twelfthMarksheet', maxCount: 1 },
+  { name: 'diplomaMarsheet', maxCount: 1 },
+  { name: 'gapCertificate', maxCount: 1 },
+]);
+
 
 app.post('/login', login);
 app.post('/register', register);
 app.post("/setData",setData);
 app.post("/upload",addData);
-app.post("/upload_files", upload.array("file"), addData);
+app.post("/upload_files", uploads, addData);
 
 
 
