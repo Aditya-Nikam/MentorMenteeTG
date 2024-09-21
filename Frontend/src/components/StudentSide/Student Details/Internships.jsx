@@ -9,6 +9,7 @@ const Internships = () => {
     jobProfile: "",
     startDate: "",
     endDate: "",
+    stipendStatus: "",
     stipend: "",
     certificate: null,
   });
@@ -36,10 +37,12 @@ const Internships = () => {
   const validate = () => {
     const newErrors = {};
     if (!formData.companyName || typeof formData.companyName !== "string") {
-      newErrors.companyName = "Company name is required and must be a valid string.";
+      newErrors.companyName =
+        "Company name is required and must be a valid string.";
     }
     if (!formData.jobProfile || typeof formData.jobProfile !== "string") {
-      newErrors.jobProfile = "Job profile is required and must be a valid string.";
+      newErrors.jobProfile =
+        "Job profile is required and must be a valid string.";
     }
     if (!formData.startDate) {
       newErrors.startDate = "Start date is required.";
@@ -47,9 +50,10 @@ const Internships = () => {
     if (!formData.endDate) {
       newErrors.endDate = "End date is required.";
     }
-    if (!formData.stipend || formData.stipend <= 0) {
+    if (!formData.stipend || formData.stipend < 0) {
       newErrors.stipend = "Stipend must be a positive number.";
     }
+
     return newErrors;
   };
 
@@ -79,6 +83,7 @@ const Internships = () => {
       jobProfile: "",
       startDate: "",
       endDate: "",
+      stipendStatus: "",
       stipend: "",
       certificate: null,
     });
@@ -114,7 +119,10 @@ const Internships = () => {
             <div className="flex flex-wrap gap-4">
               {/* Company Name */}
               <div className="flex-1 min-w-[150px]">
-                <label htmlFor="companyName" className="block text-sm font-medium text-gray-700">
+                <label
+                  htmlFor="companyName"
+                  className="block text-sm font-medium text-gray-700"
+                >
                   Company Name
                 </label>
                 <input
@@ -124,14 +132,21 @@ const Internships = () => {
                   value={formData.companyName}
                   onChange={handleChange}
                   required
-                  className={`mt-1 block w-full px-3 py-2 border ${errors.companyName ? 'border-red-500' : 'border-gray-700'} rounded-md shadow-sm`}
+                  className={`mt-1 block w-full px-3 py-2 border ${
+                    errors.companyName ? "border-red-500" : "border-gray-700"
+                  } rounded-md shadow-sm`}
                 />
-                {errors.companyName && <p className="text-red-500 text-xs">{errors.companyName}</p>}
+                {errors.companyName && (
+                  <p className="text-red-500 text-xs">{errors.companyName}</p>
+                )}
               </div>
 
               {/* Job Profile */}
               <div className="flex-1 min-w-[150px]">
-                <label htmlFor="jobProfile" className="block text-sm font-medium text-gray-700">
+                <label
+                  htmlFor="jobProfile"
+                  className="block text-sm font-medium text-gray-700"
+                >
                   Job Profile
                 </label>
                 <input
@@ -141,14 +156,21 @@ const Internships = () => {
                   value={formData.jobProfile}
                   onChange={handleChange}
                   required
-                  className={`mt-1 block w-full px-3 py-2 border ${errors.jobProfile ? 'border-red-500' : 'border-gray-700'} rounded-md shadow-sm`}
+                  className={`mt-1 block w-full px-3 py-2 border ${
+                    errors.jobProfile ? "border-red-500" : "border-gray-700"
+                  } rounded-md shadow-sm`}
                 />
-                {errors.jobProfile && <p className="text-red-500 text-xs">{errors.jobProfile}</p>}
+                {errors.jobProfile && (
+                  <p className="text-red-500 text-xs">{errors.jobProfile}</p>
+                )}
               </div>
 
               {/* Start Date */}
               <div className="flex-1 min-w-[150px]">
-                <label htmlFor="startDate" className="block text-sm font-medium text-gray-700">
+                <label
+                  htmlFor="startDate"
+                  className="block text-sm font-medium text-gray-700"
+                >
                   Start Date
                 </label>
                 <input
@@ -158,14 +180,21 @@ const Internships = () => {
                   value={formData.startDate}
                   onChange={handleChange}
                   required
-                  className={`mt-1 block w-full px-3 py-2 border ${errors.startDate ? 'border-red-500' : 'border-gray-700'} rounded-md shadow-sm`}
+                  className={`mt-1 block w-full px-3 py-2 border ${
+                    errors.startDate ? "border-red-500" : "border-gray-700"
+                  } rounded-md shadow-sm`}
                 />
-                {errors.startDate && <p className="text-red-500 text-xs">{errors.startDate}</p>}
+                {errors.startDate && (
+                  <p className="text-red-500 text-xs">{errors.startDate}</p>
+                )}
               </div>
 
               {/* End Date */}
               <div className="flex-1 min-w-[150px]">
-                <label htmlFor="endDate" className="block text-sm font-medium text-gray-700">
+                <label
+                  htmlFor="endDate"
+                  className="block text-sm font-medium text-gray-700"
+                >
                   End Date
                 </label>
                 <input
@@ -175,14 +204,46 @@ const Internships = () => {
                   value={formData.endDate}
                   onChange={handleChange}
                   required
-                  className={`mt-1 block w-full px-3 py-2 border ${errors.endDate ? 'border-red-500' : 'border-gray-700'} rounded-md shadow-sm`}
+                  className={`mt-1 block w-full px-3 py-2 border ${
+                    errors.endDate ? "border-red-500" : "border-gray-700"
+                  } rounded-md shadow-sm`}
                 />
-                {errors.endDate && <p className="text-red-500 text-xs">{errors.endDate}</p>}
+                {errors.endDate && (
+                  <p className="text-red-500 text-xs">{errors.endDate}</p>
+                )}
+              </div>
+
+              <div className="flex-1 min-w-[150px]">
+                <label
+                  htmlFor="jobProfile"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  Stipend Status
+                </label>
+                <select
+                  id="stipendStatus"
+                  name="stipendStatus"
+                  value={formData.stipendStatus}
+                  onChange={handleChange}
+                  required
+                  className={`mt-1 block w-full px-3 py-2 border ${
+                    errors.stipendStatus ? "border-red-500" : "border-gray-700"
+                  } rounded-md shadow-sm`}
+                >
+                  <option value="paid">Paid</option>
+                  <option value="unpaid">Unpaid</option>
+                </select>
+                {errors.jobProfile && (
+                  <p className="text-red-500 text-xs">{errors.stipendStatus}</p>
+                )}
               </div>
 
               {/* Stipend */}
               <div className="flex-1 min-w-[150px]">
-                <label htmlFor="stipend" className="block text-sm font-medium text-gray-700">
+                <label
+                  htmlFor="stipend"
+                  className="block text-sm font-medium text-gray-700"
+                >
                   Stipend
                 </label>
                 <input
@@ -192,14 +253,21 @@ const Internships = () => {
                   value={formData.stipend}
                   onChange={handleChange}
                   required
-                  className={`mt-1 block w-full px-3 py-2 border ${errors.stipend ? 'border-red-500' : 'border-gray-700'} rounded-md shadow-sm`}
+                  className={`mt-1 block w-full px-3 py-2 border ${
+                    errors.stipend ? "border-red-500" : "border-gray-700"
+                  } rounded-md shadow-sm`}
                 />
-                {errors.stipend && <p className="text-red-500 text-xs">{errors.stipend}</p>}
+                {errors.stipend && (
+                  <p className="text-red-500 text-xs">{errors.stipend}</p>
+                )}
               </div>
 
               {/* Certificate Upload */}
               <div className="flex-1 min-w-[150px]">
-                <label htmlFor="certificate" className="block text-sm font-medium text-gray-700">
+                <label
+                  htmlFor="certificate"
+                  className="block text-sm font-medium text-gray-700"
+                >
                   Upload Certificate
                 </label>
                 <input
@@ -222,7 +290,7 @@ const Internships = () => {
             </button>
 
             {/* Submit Button */}
-        
+
             <div className="flex justify-center mt-4">
               <button
                 type="submit"
@@ -236,7 +304,9 @@ const Internships = () => {
           {/* Table to display internships */}
           {internships.length > 0 && (
             <div className="mt-8">
-              <h3 className="text-lg font-medium text-gray-700 mb-2">Internship Details</h3>
+              <h3 className="text-lg font-medium text-gray-700 mb-2">
+                Internship Details
+              </h3>
               <table className="min-w-full bg-white shadow-md rounded-lg">
                 <thead>
                   <tr>
@@ -244,6 +314,7 @@ const Internships = () => {
                     <th className="border px-4 py-2">Job Profile</th>
                     <th className="border px-4 py-2">Start Date</th>
                     <th className="border px-4 py-2">End Date</th>
+                    <th className="border px-4 py-2">Stiped Status</th>
                     <th className="border px-4 py-2">Stipend</th>
                     <th className="border px-4 py-2">Certificate</th>
                     <th className="border px-4 py-2">Actions</th>
@@ -252,17 +323,36 @@ const Internships = () => {
                 <tbody>
                   {internships.map((internship, index) => (
                     <tr key={index}>
-                      <td className="border px-4 py-2">{internship.companyName}</td>
-                      <td className="border px-4 py-2">{internship.jobProfile}</td>
-                      <td className="border px-4 py-2">{internship.startDate}</td>
-                      <td className="border px-4 py-2">{internship.endDate}</td>
-                      <td className="border px-4 py-2">{internship.stipend}</td>
-                      <td className="border px-4 py-2">{internship.certificate ? internship.certificate.name : "N/A"}</td>
                       <td className="border px-4 py-2">
-                        <button onClick={() => handleEdit(index)} className="text-yellow-500 hover:text-yellow-700">
+                        {internship.companyName}
+                      </td>
+                      <td className="border px-4 py-2">
+                        {internship.jobProfile}
+                      </td>
+                      <td className="border px-4 py-2">
+                        {internship.startDate}
+                      </td>
+                      <td className="border px-4 py-2">{internship.endDate}</td>
+                      <td className="border px-4 py-2">
+                        {internship.stipendStatus}
+                      </td>
+                      <td className="border px-4 py-2">{internship.stipend}</td>
+                      <td className="border px-4 py-2">
+                        {internship.certificate
+                          ? internship.certificate.name
+                          : "N/A"}
+                      </td>
+                      <td className="border px-4 py-2">
+                        <button
+                          onClick={() => handleEdit(index)}
+                          className="text-yellow-500 hover:text-yellow-700"
+                        >
                           <FaEdit />
                         </button>
-                        <button onClick={() => handleDelete(index)} className="text-red-500 hover:text-red-700 ml-2">
+                        <button
+                          onClick={() => handleDelete(index)}
+                          className="text-red-500 hover:text-red-700 ml-2"
+                        >
                           <FaTrash />
                         </button>
                       </td>
@@ -271,7 +361,6 @@ const Internships = () => {
                 </tbody>
               </table>
             </div>
-            
           )}
         </div>
       </div>
