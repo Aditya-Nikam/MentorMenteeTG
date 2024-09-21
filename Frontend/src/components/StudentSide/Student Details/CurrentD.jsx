@@ -1,8 +1,10 @@
 import { useState, useEffect } from "react";
 import { FaEdit, FaTrash } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 import Navbars from "../Navbars";
 
 const CurrentD = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     semester: "",
     subjectName: "",
@@ -21,7 +23,7 @@ const CurrentD = () => {
   useEffect(() => {
     const semesterSubjects = JSON.parse(localStorage.getItem("semesterSubjects"));
     if (semesterSubjects) {
-      setFormData(semesterSubjects);
+      setSemesterSubjects(semesterSubjects);
     }
   }, []);
 
@@ -98,8 +100,8 @@ const CurrentD = () => {
 
   const handleSubmit = () => {
     alert("Form submitted!");
-    console.log(semesterSubjects)
     localStorage.setItem("semesterSubjects", JSON.stringify(semesterSubjects));
+    navigate("/internships");
   };
 
   return (
