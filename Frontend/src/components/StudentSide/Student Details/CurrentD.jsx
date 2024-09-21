@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import Navbars from "../Navbars";
 
@@ -17,6 +17,13 @@ const CurrentD = () => {
   const [semesterSubjects, setSemesterSubjects] = useState({});
   const [editingIndex, setEditingIndex] = useState(null);
   const [errors, setErrors] = useState({});
+
+  useEffect(() => {
+    const semesterSubjects = JSON.parse(localStorage.getItem("semesterSubjects"));
+    if (semesterSubjects) {
+      setFormData(semesterSubjects);
+    }
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -91,6 +98,8 @@ const CurrentD = () => {
 
   const handleSubmit = () => {
     alert("Form submitted!");
+    console.log(semesterSubjects)
+    localStorage.setItem("semesterSubjects", JSON.stringify(semesterSubjects));
   };
 
   return (
@@ -370,6 +379,7 @@ const CurrentD = () => {
             <button
               type="submit"
               className="bg-gray-800 text-white rounded-full font-semibold px-4 py-2 md-3rounded-md shadow-sm hover:bg-gray-400"
+              onClick={handleSubmit}
             >
               Submit
             </button>

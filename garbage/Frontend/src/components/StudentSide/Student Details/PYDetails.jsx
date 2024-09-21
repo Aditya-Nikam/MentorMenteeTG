@@ -1,11 +1,9 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { FaArrowLeft } from "react-icons/fa";
-import { Link, useNavigate } from "react-router-dom";
-import Navbars from "../Navbars"; // Import Navbars component
 import axios from 'axios';
+import Navbars from "../Navbars"; // Import Navbars component
 
 const PYDetails = () => {
-  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     tenthMarks: "",
     tenthPercentage: "",
@@ -20,14 +18,6 @@ const PYDetails = () => {
     gapCertificate: null,
     certificates: { tenth: null, twelfth: null, diploma: null },
   });
-
-  const [errors, setErrors] = useState({}); // State for validation errors
-  useEffect(() => {
-    const pydetails = JSON.parse(localStorage.getItem("pydetails"));
-    if (pydetails) {
-      setFormData(pydetails);
-    }
-  }, []);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -44,32 +34,12 @@ const PYDetails = () => {
     });
   };
 
-  const validate = () => {
-    const validationErrors = {};
-    if (!formData.tenthMarks) validationErrors.tenthMarks = "Total Marks is required.";
-    if (!formData.tenthPercentage) validationErrors.tenthPercentage = "Percentage is required.";
-    if (!formData.tenthPassingYear) validationErrors.tenthPassingYear = "Passing Year is required.";
-    return validationErrors;
-  };
-
-  const handleSubmit = async(e) => {
-
-    e.preventDefault();
-    const validationErrors = validate();
-    
-    if (Object.keys(validationErrors).length > 0) {
-      setErrors(validationErrors);
-      return; // Prevent submission if there are validation errors
-    }
-
-    
-
+  const handleSubmit = async() => {
     const formData1 = new FormData();
-    formData1.append("email", JSON.parse(localStorage.getItem("loggedInUser")).email);
-    formData1.append("tenthMarksheet", formData.certificates.tenth)
-    formData1.append("twelfthMarksheet", formData.certificates.twelfth)
-    formData1.append("diplomaMarsheet", formData.certificates.diploma)
-    formData1.append("gapCertificate", formData.gapCertificate);
+    formData1.append("name", "Aditya");
+    formData1.append("file", formData.certificates.tenth)
+    formData1.append("file", formData.certificates.twelfth)
+    formData1.append("file", formData.certificates.diploma)
     console.log(formData.certificates.tenth)
     
     try {
@@ -78,23 +48,22 @@ const PYDetails = () => {
           'Content-Type': 'multipart/form-data',
         },
       });
-      // alert('Files successfully uploaded!');
+      alert('Files successfully uploaded!');
     } catch (error) {
       console.error('Error uploading files:', error);
       alert('Failed to upload files.');
     }
-    localStorage.setItem("pydetails",JSON.stringify(formData));
-    navigate("/currentd");
+    alert("Form submitted successfully!");
   };
 
   return (
-    <div className=" bg-gray-100">
+    <div className="min-h-screen bg-gray-100">
       <Navbars />
-      <div className="flex items-center justify-center ">
-        <div className="bg-white border p-20 shadow-2xl w-4/5">
+      <div className="flex items-center justify-center">
+        <div className="bg-white border p-20 shadow-2xl w-full max-w-4xl">
           <h1 className="text-2xl font-bold text-black mb-6">Previous Years Details</h1>
 
-          <form className="space-y-8" onSubmit={handleSubmit}>
+          <form className="space-y-8">
             {/* 10th Details */}
             <div>
               <h2 className="text-lg font-bold text-black mb-2">10th Details</h2>
@@ -108,7 +77,6 @@ const PYDetails = () => {
                     onChange={handleChange}
                     className="mt-1 block w-full px-3 py-2 border rounded-md"
                   />
-                  {errors.tenthMarks && <p className="text-red-500 text-xs">{errors.tenthMarks}</p>}
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700">Percentage</label>
@@ -119,7 +87,6 @@ const PYDetails = () => {
                     onChange={handleChange}
                     className="mt-1 block w-full px-3 py-2 border rounded-md"
                   />
-                  {errors.tenthPercentage && <p className="text-red-500 text-xs">{errors.tenthPercentage}</p>}
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700">Passing Year</label>
@@ -130,7 +97,6 @@ const PYDetails = () => {
                     onChange={handleChange}
                     className="mt-1 block w-full px-3 py-2 border rounded-md"
                   />
-                  {errors.tenthPassingYear && <p className="text-red-500 text-xs">{errors.tenthPassingYear}</p>}
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700">Upload Certificate</label>
@@ -158,7 +124,6 @@ const PYDetails = () => {
                     onChange={handleChange}
                     className="mt-1 block w-full px-3 py-2 border rounded-md"
                   />
-                  {errors.twelfthMarks && <p className="text-red-500 text-xs">{errors.twelfthMarks}</p>}
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700">Percentage</label>
@@ -169,7 +134,6 @@ const PYDetails = () => {
                     onChange={handleChange}
                     className="mt-1 block w-full px-3 py-2 border rounded-md"
                   />
-                  {errors.twelfthPercentage && <p className="text-red-500 text-xs">{errors.twelfthPercentage}</p>}
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700">Passing Year</label>
@@ -180,7 +144,6 @@ const PYDetails = () => {
                     onChange={handleChange}
                     className="mt-1 block w-full px-3 py-2 border rounded-md"
                   />
-                  {errors.twelfthPassingYear && <p className="text-red-500 text-xs">{errors.twelfthPassingYear}</p>}
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700">Upload Certificate</label>
@@ -208,7 +171,6 @@ const PYDetails = () => {
                     onChange={handleChange}
                     className="mt-1 block w-full px-3 py-2 border rounded-md"
                   />
-                  {errors.diplomaMarks && <p className="text-red-500 text-xs">{errors.diplomaMarks}</p>}
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700">Percentage</label>
@@ -219,7 +181,6 @@ const PYDetails = () => {
                     onChange={handleChange}
                     className="mt-1 block w-full px-3 py-2 border rounded-md"
                   />
-                  {errors.diplomaPercentage && <p className="text-red-500 text-xs">{errors.diplomaPercentage}</p>}
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700">Passing Year</label>
@@ -230,7 +191,6 @@ const PYDetails = () => {
                     onChange={handleChange}
                     className="mt-1 block w-full px-3 py-2 border rounded-md"
                   />
-                  {errors.diplomaPassingYear && <p className="text-red-500 text-xs">{errors.diplomaPassingYear}</p>}
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700">Upload Certificate</label>
@@ -270,12 +230,11 @@ const PYDetails = () => {
               )}
             </div>
 
-            {/* Submit Button */}
-        
-            <div className="flex justify-center mt-4">
+            <div className="flex justify-center mt-6">
               <button
-                type="submit"
-                className="bg-gray-800 text-white rounded-full font-semibold px-4 py-2 shadow-sm hover:bg-gray-600"
+                type="button"
+                onClick={handleSubmit}
+                className="px-4 py-2 bg-cyan-500 text-white rounded-md"
               >
                 Submit
               </button>
