@@ -1,8 +1,11 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { FaEdit, FaTrash } from "react-icons/fa";
+import { Link, useNavigate } from "react-router-dom";
 import Navbars from "../Navbars";
+import axios from 'axios';
 
 const Internships = () => {
+  const navigate = useNavigate();
   // Form data state
   const [formData, setFormData] = useState({
     companyName: "",
@@ -22,6 +25,13 @@ const Internships = () => {
 
   // Index for editing an internship, null if not editing
   const [editingIndex, setEditingIndex] = useState(null);
+
+  useEffect(() => {
+    const Internships = JSON.parse(localStorage.getItem("Internships"));
+    if (Internships) {
+      setInternships(Internships);
+    }
+  }, []);
 
   // Handle form input change
   const handleChange = (e) => {
@@ -103,6 +113,54 @@ const Internships = () => {
     setFormData(internship);
     setEditingIndex(index);
     setErrors({});
+  };
+
+  const handleSubmit1 = async (e) => {
+    e.preventDefault();
+    // Create a FormData object
+    const formDataObj = new FormData();
+    formDataObj.append("email", JSON.parse(localStorage.getItem("loggedInUser")).email);
+
+    // Create a modified internships array where the certificate is replaced with certificate.name
+    const internshipsWithCertificateNames = internships.map((internship) => ({
+      ...internship,
+      certificate: internship.certificate ? internship.certificate.name : "N/A", // Replace certificate file with its name
+    }));
+
+    // Append the entire internships array as a JSON string to the FormData
+    formDataObj.append(
+      "internships",
+      JSON.stringify(internshipsWithCertificateNames)
+    );
+
+    // Append each certificate file separately if they exist
+    internships.forEach((internship, index) => {
+      if (internship.certificate) {
+        formDataObj.append("certificates", internship.certificate); // Append actual file to FormData
+      }
+    });
+
+    try {
+      await axios.post("http://localhost:3001/internships", formDataObj, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      // alert('Files successfully uploaded!');
+    } catch (error) {
+      console.error("Error uploading files:", error);
+      alert("Failed to upload files.");
+    }
+
+    // Save the internships with certificate names to localStorage
+    localStorage.setItem(
+      "Internships",
+      JSON.stringify(internshipsWithCertificateNames)
+    );
+
+    alert("Internships saved successfully!");
+    navigate("/cocurriact");
+   
   };
 
   return (
@@ -230,6 +288,9 @@ const Internships = () => {
                     errors.stipendStatus ? "border-red-500" : "border-gray-700"
                   } rounded-md shadow-sm`}
                 >
+                  <option value="" hidden>
+                    Select
+                  </option>
                   <option value="paid">Paid</option>
                   <option value="unpaid">Unpaid</option>
                 </select>
@@ -295,6 +356,7 @@ const Internships = () => {
               <button
                 type="submit"
                 className="bg-gray-800 text-white rounded-full font-semibold px-4 py-2 shadow-sm hover:bg-gray-600"
+                onClick={handleSubmit1}
               >
                 Submit
               </button>
@@ -340,6 +402,8 @@ const Internships = () => {
                       <td className="border px-4 py-2">
                         {internship.certificate
                           ? internship.certificate.name
+                            ? internship.certificate.name
+                            : internship.certificate
                           : "N/A"}
                       </td>
                       <td className="border px-4 py-2">

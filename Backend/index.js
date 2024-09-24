@@ -12,6 +12,7 @@ const {login} = require('./services/login');
 const {register} = require('./services/register');
 const {setData} = require('./services/setData');
 const {addData} = require('./services/addData');
+const {addInternships} = require('./services/setInternships');
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb){
@@ -49,6 +50,7 @@ app.post('/register', register);
 app.post("/setData",setData);
 app.post("/upload",addData);
 app.post("/upload_files", uploads, addData);
+app.post("/internships",upload.array("certificates"),addInternships)
 
 
 
