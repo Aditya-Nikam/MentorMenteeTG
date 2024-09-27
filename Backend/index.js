@@ -52,6 +52,7 @@ app.post("/upload",addData);
 app.post("/upload_files", uploads, addData);
 app.post("/internships",upload.array("certificates"),addInternships)
 app.post("/cocurriact",upload.array("codoc"),addInternships)
+app.post("/etccurriact",upload.array("etcdoc"),addInternships)
 
 
 

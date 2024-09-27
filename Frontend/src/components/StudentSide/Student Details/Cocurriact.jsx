@@ -1,9 +1,11 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Navbars from "../Navbars";
 import { FaTrash, FaEdit } from "react-icons/fa";
 import axios from 'axios';
+import {useNavigate } from "react-router-dom";
 
 const Cocurriact = () => {
+  const navigate = useNavigate();
   const [activities, setActivities] = useState([]);
   const [newActivity, setNewActivity] = useState({
     date: "",
@@ -14,6 +16,12 @@ const Cocurriact = () => {
   });
   const [editIndex, setEditIndex] = useState(null); 
 
+  useEffect(() => {
+    const Cocurriact = JSON.parse(localStorage.getItem("Cocurriact"));
+    if (Cocurriact) {
+      setActivities(Cocurriact);
+    }
+  }, []);
   // Handle input changes for new activity fields
   const handleNewActivityChange = (e) => {
     const { name, value, files } = e.target;
@@ -99,6 +107,7 @@ const Cocurriact = () => {
       "Cocurriact",
       JSON.stringify(CocurriactWithDocNames)
     );
+    navigate("/extracurriact")
     alert("Details successfully submitted!");
   };
 
@@ -215,8 +224,8 @@ const Cocurriact = () => {
                   <td className="border px-4 py-2">{activity.activity || "-"}</td>
                   <td className="border px-4 py-2">{activity.status || "-"}</td>
                   <td className="border px-4 py-2">
-                    {activity.document ? activity.document.name : "-"}
-                  </td>
+                    {activity.document ? (activity.document.name ? activity.document.name : activity.document) : "N/A"}
+                  </td >
                   <td className="border px-4 py-2 text-center">
                     <button
                       type="button"

@@ -1,8 +1,11 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Navbars from "../Navbars";
 import { FaTrash, FaEdit } from "react-icons/fa";
+import {useNavigate } from "react-router-dom";
+import axios from 'axios';
 
 const Extracurriact = () => {
+  const navigate = useNavigate();
   const [activities, setActivities] = useState([]);
   const [editIndex, setEditIndex] = useState(null);
   const [formData, setFormData] = useState({
@@ -12,8 +15,14 @@ const Extracurriact = () => {
     event: "",
     document: null,
   });
-  const [ setSubmissionMessage] = useState("");
+  const [SubmissionMessage, setSubmissionMessage] = useState("");
 
+  useEffect(() => {
+    const Etccurriact = JSON.parse(localStorage.getItem("Etccurriact"));
+    if (Etccurriact) {
+      setActivities(Etccurriact);
+    }
+  }, []);
   // Handle form input change
   const handleChange = (e) => {
     const { name, value, files } = e.target;
@@ -66,10 +75,45 @@ const Extracurriact = () => {
   };
 
   // Handle form submission 
-  const handleSubmit = (e) => {
+  const handleSubmit = async(e) => {
     e.preventDefault();
-    console.log("Activities Data Submitted:", activities);
+
+    const formDataObj = new FormData();
+    formDataObj.append("email", JSON.parse(localStorage.getItem("loggedInUser")).email);
+
+    const etccurriactWithDocNames = activities.map((activitiy) => ({
+      ...activitiy,
+      document: activitiy.document ? activitiy.document.name : "N/A", // Replace certificate file with its name
+    }));
+
+    formDataObj.append(
+      "Etccurriact",
+      JSON.stringify(etccurriactWithDocNames)
+    );
+
+    activities.forEach((activitiy, index) => {
+      if (activitiy.document) {
+        formDataObj.append("etcdoc", activitiy.document); // Append actual file to FormData
+      }
+    });
+
+    try {
+      await axios.post("http://localhost:3001/etccurriact", formDataObj, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      // alert('Files successfully uploaded!');
+    } catch (error) {
+      console.error("Error uploading files:", error);
+      alert("Failed to upload files.");
+    }
+    localStorage.setItem(
+      "Etccurriact",
+      JSON.stringify(etccurriactWithDocNames)
+    );
     alert("Details successfully submitted!");
+    navigate("/careerpath")
   };
 
   return (
@@ -213,7 +257,7 @@ const Extracurriact = () => {
                     <td className="border px-4 py-2">{activity.sem}</td>
                     <td className="border px-4 py-2">{activity.activity}</td>
                     <td className="border px-4 py-2">{activity.event}</td>
-                    <td className="border px-4 py-2">{activity.document?.name}</td>
+                    <td className="border px-4 py-2"> {activity.document ? (activity.document.name ? activity.document.name : activity.document) : "N/A"}</td>
                     <td className="border px-4 py-2">
                       <button
                         onClick={() => editActivity(index)}
