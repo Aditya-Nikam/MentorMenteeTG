@@ -1,8 +1,11 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Navbars from "../Navbars";
 import PropTypes from "prop-types";
+import axios from 'axios';
+import {useNavigate } from "react-router-dom";
 
 const StudentForm = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     careerOption: "",
     higherStudies: {
@@ -31,6 +34,12 @@ const StudentForm = () => {
   const [errors, setErrors] = useState({});
   const [successMessage, setSuccessMessage] = useState("");
 
+  useEffect(() => {
+    const CareerPath = JSON.parse(localStorage.getItem("CareerPath"));
+    if (CareerPath) {
+      setFormData(CareerPath);
+    }
+  }, []);
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -93,32 +102,9 @@ const StudentForm = () => {
     if (validateForm()) {
       alert("Form submitted successfully!");
       console.log(formData);
-      setFormData({
-        careerOption: "",
-        higherStudies: {
-          universityName: "",
-          course: "",
-          country:"",
-          admissionStatus: "",
-          exam: "",
-          score: "",
-        },
-        placement: {
-          companyName: "",
-          jobProfile: "",
-          offerLetterStatus: "",
-          package: "",
-        },
-        entrepreneurship: {
-          isEntrepreneur: "No",
-          company: "",
-          registrationStatus: "",
-          sector: "",
-          certificationStatus: "",
-        },
-      });
-      setErrors({});
     }
+    localStorage.setItem("CareerPath",JSON.stringify(formData));
+    navigate("/");
   };
 
   return (
