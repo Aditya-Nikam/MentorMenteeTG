@@ -1,7 +1,7 @@
 
 const addData = (req, res) => {
     console.log(req.body);
-    console.log(req.files);
+    console.log(__dirname);
     res.json({ message: "Successfully uploaded files" });
 };
 

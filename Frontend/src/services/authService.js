@@ -11,7 +11,7 @@ const login = (email, password) => {
     return axios.post(`${API_URL}/login`, { email, password })
         .then(response => {
             const { token, user } = response.data;
-            const { uid, type } = user[0];
+            const { uid, type } = user;
             if (token) {   
                 localStorage.setItem("token", JSON.stringify(token));
                 localStorage.setItem("user", JSON.stringify({ uid, type }));

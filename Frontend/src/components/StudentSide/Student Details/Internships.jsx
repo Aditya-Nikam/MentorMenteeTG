@@ -136,7 +136,7 @@ const Internships = () => {
     // Append each certificate file separately if they exist
     internships.forEach((internship, index) => {
       if (internship.certificate) {
-        formDataObj.append("certificates", internship.certificate); // Append actual file to FormData
+        formDataObj.append("internship", internship.certificate); // Append actual file to FormData
       }
     });
 

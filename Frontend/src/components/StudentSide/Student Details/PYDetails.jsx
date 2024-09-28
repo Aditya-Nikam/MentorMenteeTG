@@ -17,8 +17,7 @@ const PYDetails = () => {
     diplomaPercentage: "",
     diplomaPassingYear: "",
     gap: false,
-    gapCertificate: null,
-    certificates: { tenth: null, twelfth: null, diploma: null },
+    certificates: { tenth: null, twelfth: null, diploma: null, gapCertificate: null },
   });
 
   const [errors, setErrors] = useState({}); // State for validation errors
@@ -69,8 +68,7 @@ const PYDetails = () => {
     formData1.append("tenthMarksheet", formData.certificates.tenth)
     formData1.append("twelfthMarksheet", formData.certificates.twelfth)
     formData1.append("diplomaMarsheet", formData.certificates.diploma)
-    formData1.append("gapCertificate", formData.gapCertificate);
-    console.log(formData.certificates.tenth)
+    formData1.append("gapCertificate", formData.certificates.gapCertificate);
     
     try {
       await axios.post('http://localhost:3001/upload_files', formData1, {
