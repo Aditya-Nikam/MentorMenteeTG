@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import { FaArrowLeft } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import Navbars from "../Navbars";
+import axios from 'axios';
+
 
 const ParentD = () => {
   const navigate = useNavigate();
@@ -70,7 +72,7 @@ const ParentD = () => {
     return newErrors;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async(e) => {
     e.preventDefault();
     const validationErrors = validate();
     
@@ -87,9 +89,28 @@ const ParentD = () => {
     
     // Log form data to console
     console.log("Form data submitted:", formData);
+
+
+    const formDataObj = new FormData();
+    formDataObj.append("email",JSON.parse(localStorage.getItem("loggedInUser")));
+    formDataObj.append("studentDetails",localStorage.getItem("studentDetails"));
+    formDataObj.append("parentDetails",localStorage.getItem("parentDetails"));
+
+    try {
+      await axios.post('http://localhost:3001/personaldetails', formDataObj, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      // alert('Files successfully uploaded!');
+    } catch (error) {
+      console.error(error);
+    }
     navigate("/pydetails");
-   
-  };
+  }
+
+
+
 
   return (
     <div className="min-h-screen bg-gray-100">
@@ -238,6 +259,6 @@ const ParentD = () => {
       </div>
     </div>
   );
-};
 
+};
 export default ParentD;

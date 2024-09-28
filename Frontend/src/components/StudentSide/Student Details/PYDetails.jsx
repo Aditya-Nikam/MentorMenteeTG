@@ -69,9 +69,12 @@ const PYDetails = () => {
     formData1.append("twelfthMarksheet", formData.certificates.twelfth)
     formData1.append("diplomaMarsheet", formData.certificates.diploma)
     formData1.append("gapCertificate", formData.certificates.gapCertificate);
+    formData1.append("studentDetails",localStorage.getItem("studentDetails"))
+    formData1.append("parentDetails",localStorage.getItem("parentDetails"))
+    formData1.append("pydetails",localStorage.getItem("pydetails"))
     
     try {
-      await axios.post('http://localhost:3001/upload_files', formData1, {
+      await axios.post('http://localhost:3001/pydetails', formData1, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },

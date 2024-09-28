@@ -6,20 +6,21 @@ const {upload,uploads} = require("../utils/multer")
 
 router.use(cors());
 router.use(bodyParser.json());
-const {login} = require('../services/login');
-const {register} = require('../services/register');
-const {setData} = require('../services/setData');
-const {addData} = require('../services/addData');
+
+
+const {addData} = require('../services/studentServices/pyDetailsService');
 const {addInternships} = require('../services/setInternships');
 
 const loginController = require('../controllers/loginController')
 const registrationController = require('../controllers/registerController')
+const prevYearController = require('../controllers/studentControllers/prevYearController')
+const personaldetailsController = require('../controllers/studentControllers/personalDetailsController')
 
+// Student Routes
 router.post('/login', loginController.login);
 router.post('/register',registrationController.register);
-router.post("/setData",setData);
-router.post("/upload",addData);
-router.post("/upload_files", uploads, addData);
+router.post('/personaldetails',upload.none(),personaldetailsController.personaldetails);
+router.post("/pydetails", uploads, prevYearController.pydetails);
 router.post("/internships",upload.array("internship"),addInternships)
 router.post("/cocurriact",upload.array("codoc"),addInternships)
 router.post("/etccurriact",upload.array("etcdoc"),addInternships)
