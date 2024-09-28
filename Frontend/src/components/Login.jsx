@@ -16,6 +16,7 @@ const LoginPage = () => {
       user = await authService.login(email, password);
       console.log(user)
       alert("Login successful");
+      location.reload();
     } catch (error) {
       console.error(error);
       alert("Login failed");
@@ -26,9 +27,9 @@ const LoginPage = () => {
       console.log(user);
       // Redirect based on user type
       if (uid == "1" && type == "0") {
-        navigate("/sdashboard");
+        navigate("/");
       } else if (uid === "1" && type === "1") {
-        navigate("/sdashboard");
+        navigate("/");
       } else if (uid === "2" && type === "0") {
         navigate("/MentorDashboard");
       } else if (uid === "3" && type === "0") {
