@@ -37,6 +37,7 @@ exports.personaldetails = ({ studentDetails, parentDetails }) => {
             if (user.length > 0) {
                 // re/solve(user[0].s_id); // Resolve the promise with token and user
                 let s_id = user[0].s_id;
+
                 const selectS_id = 'SELECT * FROM mentor.student_details WHERE s_id = ?';
 
                 // Execute the second query
@@ -48,20 +49,8 @@ exports.personaldetails = ({ studentDetails, parentDetails }) => {
 
                     // Resolve with the result of the second query
                     if (result.length > 0) {
-                        const updateStudentDetailsQuery = `
-                            UPDATE \mentor\.\student_details\
-                            SET 
-                                name = ?, 
-                                date_of_birth = ?, 
-                                admission_year = ?, 
-                                program = ?, 
-                                department = ?, 
-                                email = ?, 
-                                mentor = ?, 
-                                current_address = ?, 
-                                permanent_address = ?
-                            WHERE s_id = ?;`;
-                        connection.query(studentDetailsQuery, [name, dob, admissionYear, program, department, email, mentorName, currentAddress, permanentAddress,s_id], async (err, user) => {
+                        const updateStudentDetailsQuery = `UPDATE mentor.student_details SET name = ?, date_of_birth = ?, admission_year = ?, program = ?, department = ?, email = ?, mentor = ?, current_address = ?, permanent_address = ?, mobile_number = ?,gender = ? WHERE s_id = ?;`;
+                        connection.query(updateStudentDetailsQuery, [name, dob, admissionYear, program, department, email, mentorName, currentAddress, permanentAddress,mobileNumber,gender,s_id], async (err, user) => {
                             if (err) {
                                 console.error('Error fetching data:', err);
                                 return reject(err); // Reject the promise in case of error
@@ -72,9 +61,9 @@ exports.personaldetails = ({ studentDetails, parentDetails }) => {
                     } else {
                         const studentDetailsQuery = `
                             INSERT INTO \mentor\.\student_details\
-                            (s_id, name, date_of_birth, admission_year, program, department, email, mentor, current_address, permanent_address)
-                            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);`;
-                        connection.query(studentDetailsQuery, [s_id, name, dob, admissionYear, program, department, email, mentorName, currentAddress, permanentAddress], async (err, user) => {
+                            (s_id, name, date_of_birth, admission_year, program, department, email, mentor, current_address, permanent_address, mobile_number, gender )
+                            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);`;
+                        connection.query(studentDetailsQuery, [s_id, name, dob, admissionYear, program, department, email, mentorName, currentAddress, permanentAddress, mobileNumber, gender], async (err, user) => {
                             if (err) {
                                 console.error('Error fetching data:', err);
                                 return reject(err); // Reject the promise in case of error
@@ -83,6 +72,10 @@ exports.personaldetails = ({ studentDetails, parentDetails }) => {
                         });
                     }
                 });
+
+
+                // insert parent detail query
+
             }
         });
     });
