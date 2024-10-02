@@ -35,16 +35,6 @@ CREATE TABLE `login` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `login`
---
-
-LOCK TABLES `login` WRITE;
-/*!40000 ALTER TABLE `login` DISABLE KEYS */;
-INSERT INTO `login` VALUES (1,'student1@gmail.com','$2b$10$mwlSOKMs8orNgRLdYnDSheilnItvUaa5RTKBpn9KlQ7oULwncVB/m','1','1'),(2,'student2@gmail.com','$2b$10$yEyaN6aQ9B.ZbpEV9HKhSuJmUlOuq.IZheI5aMa/62UCNZjgqLm.C','1','1'),(3,'student3@gmail.com','$2b$10$WbREIgGp0DMhFXp08p4vCuevgThrbdbQrFEfV6Zweh3NHKDDg1iJe','1','1'),(4,'student4@gmail.com','$2b$10$3mClf00k8/KSSmq/vX3ciuSiULqCXdCS7BbKlDNiC7qhyWLh/Iz6u','1','1'),(5,'student7@gmail.com','$2b$10$PoO84KNKSlAHK2b0CbbJLO542cRxVhZpsVpkwNf9nIxTW2ykrWZ.S','1','1'),(6,'student5@gmail.com','$2b$10$Bt09yU4NVWDDJiGa32/aFO5IB69Eps/RSjrnGXUkiTU76bi/za8u2','1','1'),(7,'student6@gmail.com','$2b$10$JgHd/.NnMmoVajEDpD4UHeGm/19NTmPTXH2W3ffJ4P8EcWmAGdwJ2','1','1');
-/*!40000 ALTER TABLE `login` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `parent_details`
 --
 
@@ -65,15 +55,6 @@ CREATE TABLE `parent_details` (
   CONSTRAINT `fk_parent_details_s_id` FOREIGN KEY (`s_id`) REFERENCES `login` (`s_id`) ON DELETE RESTRICT ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `parent_details`
---
-
-LOCK TABLES `parent_details` WRITE;
-/*!40000 ALTER TABLE `parent_details` DISABLE KEYS */;
-/*!40000 ALTER TABLE `parent_details` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `student_carrier_option`
@@ -108,15 +89,6 @@ CREATE TABLE `student_carrier_option` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `student_carrier_option`
---
-
-LOCK TABLES `student_carrier_option` WRITE;
-/*!40000 ALTER TABLE `student_carrier_option` DISABLE KEYS */;
-/*!40000 ALTER TABLE `student_carrier_option` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `student_cocurricula_activity`
 --
 
@@ -138,15 +110,6 @@ CREATE TABLE `student_cocurricula_activity` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `student_cocurricula_activity`
---
-
-LOCK TABLES `student_cocurricula_activity` WRITE;
-/*!40000 ALTER TABLE `student_cocurricula_activity` DISABLE KEYS */;
-/*!40000 ALTER TABLE `student_cocurricula_activity` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `student_currentdetails`
 --
 
@@ -156,6 +119,7 @@ DROP TABLE IF EXISTS `student_currentdetails`;
 CREATE TABLE `student_currentdetails` (
   `c_id` int NOT NULL AUTO_INCREMENT,
   `s_id` int DEFAULT NULL,
+  `semester` int DEFAULT NULL,
   `subject` varchar(45) DEFAULT NULL,
   `oral_marks` int DEFAULT NULL,
   `ia_1marks` int DEFAULT NULL,
@@ -167,17 +131,8 @@ CREATE TABLE `student_currentdetails` (
   PRIMARY KEY (`c_id`),
   KEY `s_id_idx` (`s_id`),
   CONSTRAINT `fk_student_currentdetails_s_id` FOREIGN KEY (`s_id`) REFERENCES `login` (`s_id`) ON DELETE SET NULL ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `student_currentdetails`
---
-
-LOCK TABLES `student_currentdetails` WRITE;
-/*!40000 ALTER TABLE `student_currentdetails` DISABLE KEYS */;
-/*!40000 ALTER TABLE `student_currentdetails` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `student_details`
@@ -207,16 +162,6 @@ CREATE TABLE `student_details` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `student_details`
---
-
-LOCK TABLES `student_details` WRITE;
-/*!40000 ALTER TABLE `student_details` DISABLE KEYS */;
-INSERT INTO `student_details` VALUES (1,1,'Aditya','2024-09-05','2024-09-21','TE','Artificial Intelligence & Data Science','student1@gmail.com','Prof. Anagha','bhandup','bhandup','9833674725','Male');
-/*!40000 ALTER TABLE `student_details` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `student_etc_activity`
 --
 
@@ -236,15 +181,6 @@ CREATE TABLE `student_etc_activity` (
   CONSTRAINT `fk_student_etc_activity_s_id` FOREIGN KEY (`s_id`) REFERENCES `login` (`s_id`) ON DELETE SET NULL ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `student_etc_activity`
---
-
-LOCK TABLES `student_etc_activity` WRITE;
-/*!40000 ALTER TABLE `student_etc_activity` DISABLE KEYS */;
-/*!40000 ALTER TABLE `student_etc_activity` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `student_pydetails`
@@ -273,17 +209,8 @@ CREATE TABLE `student_pydetails` (
   PRIMARY KEY (`prev_id`),
   KEY `s_id_idx` (`s_id`),
   CONSTRAINT `fk_student_pydetails_s_id` FOREIGN KEY (`s_id`) REFERENCES `login` (`s_id`) ON DELETE SET NULL ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `student_pydetails`
---
-
-LOCK TABLES `student_pydetails` WRITE;
-/*!40000 ALTER TABLE `student_pydetails` DISABLE KEYS */;
-/*!40000 ALTER TABLE `student_pydetails` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `students_internships`
@@ -307,15 +234,6 @@ CREATE TABLE `students_internships` (
   CONSTRAINT `fk_students_internships_s_id` FOREIGN KEY (`s_id`) REFERENCES `login` (`s_id`) ON DELETE SET NULL ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `students_internships`
---
-
-LOCK TABLES `students_internships` WRITE;
-/*!40000 ALTER TABLE `students_internships` DISABLE KEYS */;
-/*!40000 ALTER TABLE `students_internships` ENABLE KEYS */;
-UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -326,4 +244,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-09-29  1:36:57
+-- Dump completed on 2024-10-03  1:26:44
