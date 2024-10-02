@@ -28,7 +28,7 @@ exports.personaldetails = ({ studentDetails, parentDetails }) => {
     mentorName,
   } = parentDetails;
   const getS_id = "SELECT s_id FROM login WHERE email = ?";
-  const s_id = new Promise((resolve, reject) => {
+  return new Promise((resolve, reject) => {
     connection.query(getS_id, [email], async (err, user) => {
       if (err) {
         console.error("Error fetching data:", err);
@@ -72,7 +72,7 @@ exports.personaldetails = ({ studentDetails, parentDetails }) => {
                   console.error("Error fetching data:", err);
                   return reject(err); // Reject the promise in case of error
                 }
-                resolve({ message: "Successfully uploaded files" });
+                resolve({ message: "Successfully updated student details" });
               }
             );
           } else {
@@ -101,7 +101,7 @@ exports.personaldetails = ({ studentDetails, parentDetails }) => {
                   console.error("Error fetching data:", err);
                   return reject(err); // Reject the promise in case of error
                 }
-                resolve({ message: "Successfully uploaded files" });
+                resolve({ message: "Successfully inserted student details" });
               }
             );
           }

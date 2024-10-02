@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { FaArrowLeft } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import Navbars from "../Navbars"; // Import Navbars component
 import axios from 'axios';
@@ -67,10 +66,8 @@ const PYDetails = () => {
     formData1.append("email", JSON.parse(localStorage.getItem("loggedInUser")).email);
     formData1.append("tenthMarksheet", formData.certificates.tenth)
     formData1.append("twelfthMarksheet", formData.certificates.twelfth)
-    formData1.append("diplomaMarsheet", formData.certificates.diploma)
+    formData1.append("diplomaMarksheet", formData.certificates.diploma)
     formData1.append("gapCertificate", formData.certificates.gapCertificate);
-    formData1.append("studentDetails",localStorage.getItem("studentDetails"))
-    formData1.append("parentDetails",localStorage.getItem("parentDetails"))
     formData1.append("pydetails",localStorage.getItem("pydetails"))
     
     try {

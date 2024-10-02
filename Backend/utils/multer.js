@@ -22,7 +22,7 @@ const upload = multer({ storage: storage});
 const uploads = upload.fields([
     { name: 'tenthMarksheet', maxCount: 1 },
     { name: 'twelfthMarksheet', maxCount: 1 },
-    { name: 'diplomaMarsheet', maxCount: 1 },
+    { name: 'diplomaMarksheet', maxCount: 1 },
     { name: 'gapCertificate', maxCount: 1 },
 ]);
 
