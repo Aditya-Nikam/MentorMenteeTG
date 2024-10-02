@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import Navbars from "../Navbars";
+import axios from 'axios';
 
 const CurrentD = () => {
   const navigate = useNavigate();
@@ -98,9 +99,24 @@ const CurrentD = () => {
     setErrors({});
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     alert("Form submitted!");
+
     localStorage.setItem("semesterSubjects", JSON.stringify(semesterSubjects));
+    const formDataObj = new FormData();
+    formDataObj.append("email",JSON.parse(localStorage.getItem("loggedInUser")).email);
+    formDataObj.append("semesterSubjects",JSON.stringify(semesterSubjects));
+
+    try {
+      await axios.post('http://localhost:3001/cydetails', formDataObj, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      // alert('Files successfully uploaded!');
+    } catch (error) {
+      console.error(error);
+    }
     navigate("/internships");
   };
 

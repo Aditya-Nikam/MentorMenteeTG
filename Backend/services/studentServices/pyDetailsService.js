@@ -1,6 +1,5 @@
 const { connection } = require('../../config/dbconfig');
 const fs = require('fs');
-const path = require('path');
 
 exports.pydetails = (body, files) => {
     console.log(files);
