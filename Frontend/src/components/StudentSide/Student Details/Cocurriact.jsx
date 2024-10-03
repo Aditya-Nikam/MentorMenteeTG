@@ -92,7 +92,7 @@ const Cocurriact = () => {
     });
 
     try {
-      await axios.post("http://localhost:3001/cocurriact", formDataObj, {
+      await axios.post("http://localhost:3001//cocurriact", formDataObj, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
