@@ -60,33 +60,41 @@ const Internships = () => {
     if (!formData.endDate) {
       newErrors.endDate = "End date is required.";
     }
-    if (!formData.stipend || formData.stipend < 0) {
-      newErrors.stipend = "Stipend must be a positive number.";
+    if (!formData.stipend || formData.stipend <= 0) {
+      newErrors.stipend = "please enter a valid input";
+    }
+    if (!formData.certificate) {
+      newErrors.certificate = "please upload the certificate";
     }
 
     return newErrors;
   };
 
-  // Handle adding or updating an internship
   const handleAddOrUpdate = () => {
     const validationErrors = validate();
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
       return;
     }
-
+  
+    // Ensure that certificate is set to "N/A" if not uploaded
+    const updatedFormData = {
+      ...formData,
+      certificate: formData.certificate ? formData.certificate : "N/A",
+    };
+  
     if (editingIndex === null) {
       // Add new internship
-      setInternships([...internships, formData]);
+      setInternships([...internships, updatedFormData]);
       alert("Internship added successfully!"); // Alert for adding
     } else {
       // Update existing internship
       const updatedInternships = [...internships];
-      updatedInternships[editingIndex] = formData;
+      updatedInternships[editingIndex] = updatedFormData;
       setInternships(updatedInternships);
       alert("Internship updated successfully!"); // Alert for updating
     }
-
+  
     // Reset the form and clear the editing index
     setFormData({
       companyName: "",
@@ -100,6 +108,7 @@ const Internships = () => {
     setEditingIndex(null);
     setErrors({});
   };
+  
 
   // Handle deleting an internship
   const handleDelete = (index) => {
@@ -153,10 +162,10 @@ const Internships = () => {
     }
 
     // Save the internships with certificate names to localStorage
-    localStorage.setItem(
-      "Internships",
-      JSON.stringify(internshipsWithCertificateNames)
-    );
+      localStorage.setItem(
+        "Internships",
+        JSON.stringify(internshipsWithCertificateNames)
+      );
 
     alert("Internships saved successfully!");
     navigate("/cocurriact");
@@ -329,7 +338,7 @@ const Internships = () => {
                   htmlFor="certificate"
                   className="block text-sm font-medium text-gray-700"
                 >
-                  Upload Certificate
+                  Upload Certificate/Offer Letter
                 </label>
                 <input
                   type="file"
@@ -400,11 +409,7 @@ const Internships = () => {
                       </td>
                       <td className="border px-4 py-2">{internship.stipend}</td>
                       <td className="border px-4 py-2">
-                        {internship.certificate
-                          ? internship.certificate.name
-                            ? internship.certificate.name
-                            : internship.certificate
-                          : "N/A"}
+                        {internship.certificate ? (internship.certificate.name ? internship.certificate.name : internship.certificate) : "N/A"}
                       </td>
                       <td className="border px-4 py-2">
                         <button
