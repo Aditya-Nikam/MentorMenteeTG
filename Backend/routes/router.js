@@ -15,6 +15,7 @@ const prevYearController = require('../controllers/studentControllers/prevYearCo
 const currentYearController = require('../controllers/studentControllers/currentYearController')
 const internshipController = require('../controllers/studentControllers/intenshipController')
 const cocurrActController = require('../controllers/studentControllers/cocurriActivityController')
+const etcActController = require('../controllers/studentControllers/etcActivityController')
 
 
 // Student Routes
@@ -25,7 +26,7 @@ router.post("/pydetails", uploads, prevYearController.pydetails);
 router.post("/cydetails", upload.none(), currentYearController.cydetails);
 router.post("/internships", upload.array("internship"), internshipController.internshipDetails)
 router.post("/cocurriact", upload.array("codoc"),cocurrActController.cocurrActivity)
-// router.post("/etccurriact", upload.array("etcdoc"), addInternships)
+router.post("/etccurriact", upload.array("etcdoc"), etcActController.etcActivity)
 
 
 module.exports = router;
