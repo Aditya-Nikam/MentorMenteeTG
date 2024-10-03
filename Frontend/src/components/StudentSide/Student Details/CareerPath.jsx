@@ -97,11 +97,23 @@ const StudentForm = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (validateForm()) {
       alert("Form submitted successfully!");
-      console.log(formData);
+    }
+    const formDataObj = new FormData();
+    formDataObj.append("email", JSON.parse(localStorage.getItem("loggedInUser")).email);
+    formDataObj.append("careerPath", JSON.stringify(formData));
+    try {
+      await axios.post("http://localhost:3001//carrierPath", formDataObj, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      // alert('Files successfully uploaded!');
+    } catch (error) {
+      console.error("Error uploading data:", error);
     }
     localStorage.setItem("CareerPath",JSON.stringify(formData));
     navigate("/");
