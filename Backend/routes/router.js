@@ -32,4 +32,8 @@ router.post("/etccurriact", upload.array("etcdoc"), etcActController.etcActivity
 router.post("/carrierPath", upload.none(), careerPathController.carrierPath)
 
 
+// student get routes
+router.post('/getStudentDetails',upload.none(), personaldetailsController.getStudent)
+
+
 module.exports = router;

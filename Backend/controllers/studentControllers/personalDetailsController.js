@@ -7,3 +7,12 @@ exports.personaldetails = async (req, res)=>{
         res.status(500).send({ message: error.message });
       }
 };
+
+exports.getStudent =  async (req, res)=>{
+  try {
+      const getStudentdetails = await personaldetailsServices.getStudentdetails(req.body.email);
+      res.json(getStudentdetails);
+    } catch (error) {
+      res.status(500).send({ message: error.message });
+    }
+};

@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { FaArrowRight } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom"; // Import Link for navigation
 import Navbars from "../Navbars"; // Make sure this path is correct
+import axios from 'axios';
 
 const StudentD = () => {
   const navigate = useNavigate();
@@ -21,16 +22,58 @@ const StudentD = () => {
   const [errors, setErrors] = useState({});
 
   useEffect(() => {
-    const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
-    if (loggedInUser && loggedInUser.email) {
-      setFormData((prevData) => ({ ...prevData, email: loggedInUser.email }));
-    }
-    const studentDetails = JSON.parse(localStorage.getItem("studentDetails"));
-    if (studentDetails) {
-      setFormData(studentDetails);
-    }
-  }, []);
-  
+    const fetchData = async () => {
+      const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
+      
+      if (loggedInUser && loggedInUser.email) {
+        setFormData((prevData) => ({ ...prevData, email: loggedInUser.email }));
+
+        const formDataObj = new FormData();
+        formDataObj.append("email", loggedInUser.email);
+
+        try {
+          const response = await axios.post('http://localhost:3001/getStudentDetails', formDataObj, {
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            },
+          });
+          const {
+            name,
+            date_of_birth,
+            admission_year,
+            program,
+            department,
+            email,
+            current_address,
+            permanent_address,
+            mobile_number,
+            gender
+        } = JSON.parse(response.data)
+          console.log(JSON.parse(response.data)); // Handle the response data from the server
+          // If you want to update formData based on the response:
+
+          setFormData({
+            name: name,
+            gender: gender,
+            email: email,
+            admissionYear: admission_year.split("T")[0],
+            department: department,
+            program: program,
+            mobileNumber: mobile_number,
+            dob: date_of_birth.split("T")[0],
+            currentAddress: current_address,
+            permanentAddress: permanent_address,
+          });
+
+        } catch (error) {
+          console.error('Error fetching student details:', error);
+        }
+      }
+    };
+
+    fetchData(); // Call the async function
+
+  }, []); 
 
   // Handle form field changes
   const handleChange = (e) => {
@@ -138,7 +181,10 @@ const StudentD = () => {
               {/* Row 1: Name, Gender, Date of Birth */}
               <div className="grid grid-cols-3 gap-4">
                 <div>
-                  <label htmlFor="name" className="block text-sm font-medium text-gray-700">
+                  <label
+                    htmlFor="name"
+                    className="block text-sm font-medium text-gray-700"
+                  >
                     Full Name
                   </label>
                   <input
@@ -149,10 +195,15 @@ const StudentD = () => {
                     onChange={handleChange}
                     className="mt-1 block w-full px-3 py-2 border border-gray-600 rounded-md shadow-sm focus:outline-none sm:text-sm"
                   />
-                  {errors.name && <p className="text-red-500 text-xs">{errors.name}</p>}
+                  {errors.name && (
+                    <p className="text-red-500 text-xs">{errors.name}</p>
+                  )}
                 </div>
                 <div>
-                  <label htmlFor="gender" className="block text-sm font-medium text-gray-700">
+                  <label
+                    htmlFor="gender"
+                    className="block text-sm font-medium text-gray-700"
+                  >
                     Gender
                   </label>
                   <select
@@ -167,10 +218,15 @@ const StudentD = () => {
                     <option value="Male">Male</option>
                     <option value="Other">Other</option>
                   </select>
-                  {errors.gender && <p className="text-red-500 text-xs">{errors.gender}</p>}
+                  {errors.gender && (
+                    <p className="text-red-500 text-xs">{errors.gender}</p>
+                  )}
                 </div>
                 <div>
-                  <label htmlFor="dob" className="block text-sm font-medium text-gray-700">
+                  <label
+                    htmlFor="dob"
+                    className="block text-sm font-medium text-gray-700"
+                  >
                     Date of Birth
                   </label>
                   <input
@@ -181,14 +237,19 @@ const StudentD = () => {
                     onChange={handleChange}
                     className="mt-1 block w-full px-3 py-2 border border-gray-600 rounded-md shadow-sm focus:outline-none sm:text-sm"
                   />
-                  {errors.dob && <p className="text-red-500 text-xs">{errors.dob}</p>}
+                  {errors.dob && (
+                    <p className="text-red-500 text-xs">{errors.dob}</p>
+                  )}
                 </div>
               </div>
 
               {/* Row 2: Admission Year, Program, Department */}
               <div className="grid grid-cols-3 gap-4">
                 <div>
-                  <label htmlFor="admissionYear" className="block text-sm font-medium text-gray-700">
+                  <label
+                    htmlFor="admissionYear"
+                    className="block text-sm font-medium text-gray-700"
+                  >
                     Admission Year
                   </label>
                   <input
@@ -199,10 +260,17 @@ const StudentD = () => {
                     onChange={handleChange}
                     className="mt-1 block w-full px-3 py-2 border border-gray-600 rounded-md shadow-sm focus:outline-none sm:text-sm"
                   />
-                  {errors.admissionYear && <p className="text-red-500 text-xs">{errors.admissionYear}</p>}
+                  {errors.admissionYear && (
+                    <p className="text-red-500 text-xs">
+                      {errors.admissionYear}
+                    </p>
+                  )}
                 </div>
                 <div>
-                  <label htmlFor="program" className="block text-sm font-medium text-gray-700">
+                  <label
+                    htmlFor="program"
+                    className="block text-sm font-medium text-gray-700"
+                  >
                     Program
                   </label>
                   <select
@@ -218,10 +286,15 @@ const StudentD = () => {
                     <option value="TE">TE</option>
                     <option value="BE">BE</option>
                   </select>
-                  {errors.program && <p className="text-red-500 text-xs">{errors.program}</p>}
+                  {errors.program && (
+                    <p className="text-red-500 text-xs">{errors.program}</p>
+                  )}
                 </div>
                 <div>
-                  <label htmlFor="department" className="block text-sm font-medium text-gray-700">
+                  <label
+                    htmlFor="department"
+                    className="block text-sm font-medium text-gray-700"
+                  >
                     Department
                   </label>
                   <select
@@ -233,19 +306,26 @@ const StudentD = () => {
                   >
                     <option value="">Select Department</option>
                     <option value="Computer Science">Computer Science</option>
-                    <option value="Information Technology">Information Technology</option>
+                    <option value="Information Technology">
+                      Information Technology
+                    </option>
                     <option value="Artificial Intelligence & Data Science">
                       Artificial Intelligence & Data Science
                     </option>
                   </select>
-                  {errors.department && <p className="text-red-500 text-xs">{errors.department}</p>}
+                  {errors.department && (
+                    <p className="text-red-500 text-xs">{errors.department}</p>
+                  )}
                 </div>
               </div>
 
               {/* Row 3: Email, Mobile Number */}
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+                  <label
+                    htmlFor="email"
+                    className="block text-sm font-medium text-gray-700"
+                  >
                     Email
                   </label>
                   <input
@@ -259,7 +339,10 @@ const StudentD = () => {
                   />
                 </div>
                 <div>
-                  <label htmlFor="mobileNumber" className="block text-sm font-medium text-gray-700">
+                  <label
+                    htmlFor="mobileNumber"
+                    className="block text-sm font-medium text-gray-700"
+                  >
                     Mobile Number
                   </label>
                   <input
@@ -270,14 +353,21 @@ const StudentD = () => {
                     onChange={handleChange}
                     className="mt-1 block w-full px-3 py-2 border border-gray-600 rounded-md shadow-sm focus:outline-none sm:text-sm"
                   />
-                  {errors.mobileNumber && <p className="text-red-500 text-xs">{errors.mobileNumber}</p>}
+                  {errors.mobileNumber && (
+                    <p className="text-red-500 text-xs">
+                      {errors.mobileNumber}
+                    </p>
+                  )}
                 </div>
               </div>
 
               {/* Row 4: Current Address, Permanent Address */}
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label htmlFor="currentAddress" className="block text-sm font-medium text-gray-700">
+                  <label
+                    htmlFor="currentAddress"
+                    className="block text-sm font-medium text-gray-700"
+                  >
                     Current Address
                   </label>
                   <textarea
@@ -287,10 +377,17 @@ const StudentD = () => {
                     onChange={handleChange}
                     className="mt-1 block w-full px-3 py-2 border border-gray-600 rounded-md shadow-sm focus:outline-none sm:text-sm"
                   />
-                  {errors.currentAddress && <p className="text-red-500 text-xs">{errors.currentAddress}</p>}
+                  {errors.currentAddress && (
+                    <p className="text-red-500 text-xs">
+                      {errors.currentAddress}
+                    </p>
+                  )}
                 </div>
                 <div>
-                  <label htmlFor="permanentAddress" className="block text-sm font-medium text-gray-700">
+                  <label
+                    htmlFor="permanentAddress"
+                    className="block text-sm font-medium text-gray-700"
+                  >
                     Permanent Address
                   </label>
                   <textarea
@@ -300,7 +397,11 @@ const StudentD = () => {
                     onChange={handleChange}
                     className="mt-1 block w-full px-3 py-2 border border-gray-600 rounded-md shadow-sm focus:outline-none sm:text-sm"
                   />
-                  {errors.permanentAddress && <p className="text-red-500 text-xs">{errors.permanentAddress}</p>}
+                  {errors.permanentAddress && (
+                    <p className="text-red-500 text-xs">
+                      {errors.permanentAddress}
+                    </p>
+                  )}
                 </div>
               </div>
 

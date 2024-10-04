@@ -164,3 +164,19 @@ exports.personaldetails = ({ studentDetails, parentDetails }) => {
     });
   });
 };
+
+exports.getStudentdetails = (email)=>{
+  return new Promise((resolve, reject) => {
+    const query = `SELECT * FROM mentor.student_details WHERE s_id = (SELECT s_id FROM login WHERE email = ?);`;
+
+    connection.query(query,[email],async (err, user) => {
+        if (err) {
+          console.error("Error updating parent details:", err);
+          return reject(err); // Reject the promise in case of error
+        }
+
+        resolve(JSON.stringify(user[0]));
+      }
+    );
+  });
+}
