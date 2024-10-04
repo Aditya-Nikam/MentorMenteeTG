@@ -3,7 +3,7 @@ const { connection } = require("../../config/dbconfig");
 exports.personaldetails = ({ studentDetails, parentDetails }) => {
   studentDetails = JSON.parse(studentDetails);
   parentDetails = JSON.parse(parentDetails);
-  console.log({ studentDetails, parentDetails });
+  // console.log({ studentDetails, parentDetails });
 
   const {
     name,
@@ -37,6 +37,7 @@ exports.personaldetails = ({ studentDetails, parentDetails }) => {
       if (user.length > 0) {
         // re/solve(user[0].s_id); // Resolve the promise with token and user
         let s_id = user[0].s_id;
+        // console.log(s_id);
 
         const selectS_id =
           "SELECT * FROM mentor.student_details WHERE s_id = ?";
@@ -76,10 +77,7 @@ exports.personaldetails = ({ studentDetails, parentDetails }) => {
               }
             );
           } else {
-            const studentDetailsQuery = `
-                            INSERT INTO \mentor\.\student_details\
-                            (s_id, name, date_of_birth, admission_year, program, department, email, mentor, current_address, permanent_address, mobile_number, gender )
-                            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);`;
+            const studentDetailsQuery = `INSERT INTO \mentor\.\student_details\(s_id, name, date_of_birth, admission_year, program, department, email, mentor, current_address, permanent_address, mobile_number, gender )VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);`;
             connection.query(
               studentDetailsQuery,
               [
