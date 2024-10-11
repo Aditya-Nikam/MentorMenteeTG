@@ -1,28 +1,38 @@
 import React, { useState, useEffect } from "react";
 import HODNavbar from "./HodNavbar";
-
-// Sample data for students
-const studentsData = [
-  { id: 1, name: "John Doe", year: "2023", department: "CSE" },
-  { id: 2, name: "Jane Smith", year: "2023", department: "ECE" },
-  { id: 3, name: "Alice Johnson", year: "2024", department: "CSE" },
-  { id: 4, name: "Michael Brown", year: "2024", department: "ECE" },
-];
+import axios from "axios";
 
 export default function HODAnnouncementPage() {
   const [year, setYear] = useState("");
   const [department, setDepartment] = useState("");
   const [filteredStudents, setFilteredStudents] = useState([]);
   const [announcement, setAnnouncement] = useState("");
+  const [studentsData, setStudentsData] = useState([]);
 
   useEffect(() => {
-    const filtered = studentsData.filter(
-      (student) =>
-        (year ? student.year === year : true) &&
-        (department ? student.department === department : true)
-    );
-    setFilteredStudents(filtered);
-  }, [year, department]);
+    const fetchStudents = async () => {
+      try {
+        const response = await axios.get("http://localhost:3001/allStudents"); // Adjust the endpoint as needed
+        setStudentsData(response.data); // Set the fetched data to 'students' state
+      } catch (error) {
+        console.error("Error fetching students data:", error);
+      }
+    };
+    fetchStudents();
+  }, []); // Fetch student data only once when the component mounts
+
+  useEffect(() => {
+    const filterStudents = () => {
+      const filtered = studentsData.filter(
+        (student) =>
+          (year ? student.year === year : true) &&
+          (department ? student.department === department : true)
+      );
+      setFilteredStudents(filtered);
+    };
+
+    filterStudents();
+  }, [year, department, studentsData]); // Re-run filtering when year, department, or studentsData changes
 
   const handleSendAnnouncement = () => {
     if (announcement.trim() === "") {
@@ -34,14 +44,7 @@ export default function HODAnnouncementPage() {
       alert("No students found for the selected year and branch.");
       return;
     }
-
-    // Handle sending announcement logic here
-    alert(
-      `Announcement sent to ${filteredStudents.length} students: "${announcement}"`
-    );
-    setAnnouncement(""); // Clear the input after sending
   };
-
   return (
     <div className="min-h-screen bg-gray-100">
       {/* Navbar */}

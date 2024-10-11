@@ -17,6 +17,8 @@ const internshipController = require('../controllers/studentControllers/intenshi
 const cocurrActController = require('../controllers/studentControllers/cocurriActivityController')
 const etcActController = require('../controllers/studentControllers/etcActivityController')
 const careerPathController = require('../controllers/studentControllers/carrierPathController')
+const mentorController = require('../controllers/mentorControllers/mentorController')
+const studentController = require('../controllers/studentControllers/studentController')
 
 
 
@@ -35,6 +37,10 @@ router.post("/carrierPath", upload.none(), careerPathController.carrierPath)
 // student get routes
 router.post('/getStudentDetails',upload.none(), personaldetailsController.getStudent)
 router.post('/getParentsDetails',upload.none(), personaldetailsController.getParent)
+router.get('/allStudents',studentController.allStudents);
+
+// mentor routes
+router.get('/allMentors',mentorController.allMentors);
 
 
 module.exports = router;

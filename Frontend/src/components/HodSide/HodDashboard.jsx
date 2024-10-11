@@ -2,23 +2,9 @@ import React, { useState, useEffect } from "react";
 import StudentListHod from "./StudentListHod";
 import { Link } from "react-router-dom";
 import HODNavbar from "./HodNavbar";
+import axios from "axios";
 
 // Sample data for students and mentors
-const studentsData = [
-  { id: 1, name: "John Doe", year: "2023", department: "CSE" },
-  { id: 2, name: "Jane Smith", year: "2023", department: "ECE" },
-  { id: 3, name: "Alice Johnson", year: "2024", department: "CSE" },
-  { id: 4, name: "Alice Johnson", year: "2024", department: "CSE" },
-  { id: 5, name: "Alice Johnson", year: "2024", department: "CSE" },
-  { id: 6, name: "Alice Johnson", year: "2024", department: "CSE" },
-  { id: 7, name: "Alice Johnson", year: "2024", department: "CSE" },
-];
-
-const mentorsData = [
-  { id: 1, name: "Mentor A" },
-  { id: 2, name: "Mentor B" },
-  { id: 3, name: "Mentor C" },
-];
 
 export default function HODDashboard() {
   const [year, setYear] = useState("");
@@ -27,12 +13,41 @@ export default function HODDashboard() {
   const [mentorAssignments, setMentorAssignments] = useState({});
   const [selectedMentor, setSelectedMentor] = useState(null);
   const [assignedStudents, setAssignedStudents] = useState({});
+  const [studentsData, setStudentsData] = useState([]);
+  const [mentorsData, setMentorsData] = useState([]);
+
 
   useEffect(() => {
+    const fetchStudents = async () => {
+      try {
+        const response = await axios.get('http://localhost:3001//allStudents'); // Adjust the endpoint as needed
+        setStudentsData(response.data)
+      } catch (error) {
+        console.error('Error fetching students data:', error);
+      }
+    };
+
+    const fetchMentors = async () => {
+      try {
+        const response = await axios.get('http://localhost:3001//allMentors'); // Adjust the endpoint as needed
+        setMentorsData(response.data) // Use setMentorsData to update the state
+        console.log(response.data)
+      } catch (error) {
+        console.error('Error fetching mentors data:', error);
+      }
+    };
+
+
+    fetchStudents();
+    fetchMentors();
+  }, []); 
+
+  useEffect(() => {
+ 
     const filtered = studentsData.filter(
       (student) =>
-        (year ? student.year === year : true) &&
-        (department ? student.department === department : true)
+        (year ? student.year == year : true) &&
+        (department ? student.department == department : true)
     );
     setFilteredStudents(filtered);
   }, [year, department]);

@@ -1,25 +1,29 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import HODNavbar from "./HodNavbar"; // Import the Navbar component
-
-// Sample data for students
-const studentsData = [
-  { id: 1, name: "John Doe", year: "2023", department: "CSE" },
-  { id: 2, name: "Jane Smith", year: "2023", department: "ECE" },
-  { id: 3, name: "Alice Johnson", year: "2024", department: "CSE" },
-  { id: 4, name: "Bob Brown", year: "2024", department: "ECE" },
-  { id: 5, name: "Charlie Davis", year: "2023", department: "CSE" },
-  { id: 6, name: "David Miller", year: "2023", department: "ECE" },
-  // Add more students if needed
-];
+import axios from "axios";
 
 export default function HODStudentList() {
   const [year, setYear] = useState("");
   const [department, setDepartment] = useState("");
   const [searchTerm, setSearchTerm] = useState(""); // New state for search input
-  const [filteredStudents, setFilteredStudents] = useState(studentsData);
+  const [filteredStudents, setFilteredStudents] = useState([]);
+  const [students, setStudents] = useState([]); // Renamed state variable
+
+  useEffect(() => {
+    const fetchStudents = async () => {
+      try {
+        const response = await axios.get('http://localhost:3001/allStudents'); // Adjust the endpoint as needed
+        setStudents(response.data); // Set the fetched data to 'students' state
+        setFilteredStudents(response.data); // Initialize filtered students with all data
+      } catch (error) {
+        console.error('Error fetching students data:', error);
+      }
+    };
+    fetchStudents();
+  }, []);
 
   const filterStudents = () => {
-    const filtered = studentsData.filter(
+    const filtered = students.filter(
       (student) =>
         (year ? student.year === year : true) &&
         (department ? student.department === department : true) &&

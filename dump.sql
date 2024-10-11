@@ -31,8 +31,45 @@ CREATE TABLE `login` (
   `uid` varchar(16) DEFAULT NULL,
   `type` varchar(16) DEFAULT NULL,
   PRIMARY KEY (`s_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `login`
+--
+
+LOCK TABLES `login` WRITE;
+/*!40000 ALTER TABLE `login` DISABLE KEYS */;
+INSERT INTO `login` VALUES (1,'student1@gmail.com','$2b$10$mwlSOKMs8orNgRLdYnDSheilnItvUaa5RTKBpn9KlQ7oULwncVB/m','1','1'),(2,'student2@gmail.com','$2b$10$yEyaN6aQ9B.ZbpEV9HKhSuJmUlOuq.IZheI5aMa/62UCNZjgqLm.C','1','1'),(3,'student3@gmail.com','$2b$10$WbREIgGp0DMhFXp08p4vCuevgThrbdbQrFEfV6Zweh3NHKDDg1iJe','1','1'),(4,'student4@gmail.com','$2b$10$3mClf00k8/KSSmq/vX3ciuSiULqCXdCS7BbKlDNiC7qhyWLh/Iz6u','1','1'),(5,'student7@gmail.com','$2b$10$PoO84KNKSlAHK2b0CbbJLO542cRxVhZpsVpkwNf9nIxTW2ykrWZ.S','1','1'),(6,'student5@gmail.com','$2b$10$Bt09yU4NVWDDJiGa32/aFO5IB69Eps/RSjrnGXUkiTU76bi/za8u2','1','1'),(7,'student6@gmail.com','$2b$10$JgHd/.NnMmoVajEDpD4UHeGm/19NTmPTXH2W3ffJ4P8EcWmAGdwJ2','1','1'),(8,'mentor1@gmail.com','$2b$10$mwlSOKMs8orNgRLdYnDSheilnItvUaa5RTKBpn9KlQ7oULwncVB/m','2',NULL),(9,'mentor2@gmail.com','$2b$10$mwlSOKMs8orNgRLdYnDSheilnItvUaa5RTKBpn9KlQ7oULwncVB/m','2',NULL),(10,'mentor3@gmail.com','$2b$10$mwlSOKMs8orNgRLdYnDSheilnItvUaa5RTKBpn9KlQ7oULwncVB/m','2',NULL),(11,'hod1@gmail.com','$2b$10$mwlSOKMs8orNgRLdYnDSheilnItvUaa5RTKBpn9KlQ7oULwncVB/m','3',NULL),(12,'hod2@gmail.com','$2b$10$mwlSOKMs8orNgRLdYnDSheilnItvUaa5RTKBpn9KlQ7oULwncVB/m','3',NULL),(13,'hod3@gmail.com','$2b$10$mwlSOKMs8orNgRLdYnDSheilnItvUaa5RTKBpn9KlQ7oULwncVB/m','3',NULL);
+/*!40000 ALTER TABLE `login` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `mentors`
+--
+
+DROP TABLE IF EXISTS `mentors`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `mentors` (
+  `m_id` int NOT NULL AUTO_INCREMENT,
+  `s_id` int DEFAULT NULL,
+  `name` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`m_id`),
+  KEY `s_id_idx` (`s_id`),
+  CONSTRAINT `s_id` FOREIGN KEY (`s_id`) REFERENCES `login` (`s_id`) ON DELETE SET NULL ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `mentors`
+--
+
+LOCK TABLES `mentors` WRITE;
+/*!40000 ALTER TABLE `mentors` DISABLE KEYS */;
+INSERT INTO `mentors` VALUES (1,8,'Dr. Anagha'),(2,9,'Prof. Geetanjali'),(3,10,'Prof. Seema');
+/*!40000 ALTER TABLE `mentors` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `parent_details`
@@ -53,8 +90,18 @@ CREATE TABLE `parent_details` (
   PRIMARY KEY (`p_id`),
   KEY `s_id_idx` (`s_id`),
   CONSTRAINT `fk_parent_details_s_id` FOREIGN KEY (`s_id`) REFERENCES `login` (`s_id`) ON DELETE RESTRICT ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `parent_details`
+--
+
+LOCK TABLES `parent_details` WRITE;
+/*!40000 ALTER TABLE `parent_details` DISABLE KEYS */;
+INSERT INTO `parent_details` VALUES (1,1,'Suresh','9833674725','aditya@gmai.com','Sujata','9152034336','niku@gmai.com'),(2,2,'Suresh','8080705055','aditya@gmai.com','Sujata','9152034336','abc@gmai.com'),(3,6,'Mr deshmukh','5556668886','aditya@gmai.com','Mrs Deshmukh','5556668886','aditya@gmai.com');
+/*!40000 ALTER TABLE `parent_details` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `student_carrier_option`
@@ -79,14 +126,24 @@ CREATE TABLE `student_carrier_option` (
   `package` varchar(45) DEFAULT NULL,
   `isEntrepreneur` varchar(45) DEFAULT NULL,
   `company` varchar(45) DEFAULT NULL,
-  `registratio_status` varchar(45) DEFAULT NULL,
+  `registration_status` varchar(45) DEFAULT NULL,
   `sector` varchar(45) DEFAULT NULL,
   `certificationStatus` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`carr_id`),
   KEY `s_id_idx` (`s_id`),
   CONSTRAINT `fk_student_carrier_option_s_id` FOREIGN KEY (`s_id`) REFERENCES `login` (`s_id`) ON DELETE RESTRICT ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `student_carrier_option`
+--
+
+LOCK TABLES `student_carrier_option` WRITE;
+/*!40000 ALTER TABLE `student_carrier_option` DISABLE KEYS */;
+INSERT INTO `student_carrier_option` VALUES (1,3,'placement',NULL,NULL,NULL,NULL,NULL,NULL,'Car','MAR','Received','500000',NULL,NULL,NULL,NULL,NULL),(2,2,'higherStudies','Mumbai','ME','India','Admitted','GRE',500,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+/*!40000 ALTER TABLE `student_carrier_option` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `student_cocurricula_activity`
@@ -103,11 +160,22 @@ CREATE TABLE `student_cocurricula_activity` (
   `activity` varchar(45) DEFAULT NULL,
   `status` varchar(45) DEFAULT NULL,
   `activity_certificate` varchar(255) DEFAULT NULL,
+  `activity_certificate_path` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`co_id`),
   KEY `s_id_idx` (`s_id`),
   CONSTRAINT `fk_student_cocurricula_activity_s_id` FOREIGN KEY (`s_id`) REFERENCES `login` (`s_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `student_cocurricula_activity`
+--
+
+LOCK TABLES `student_cocurricula_activity` WRITE;
+/*!40000 ALTER TABLE `student_cocurricula_activity` DISABLE KEYS */;
+INSERT INTO `student_cocurricula_activity` VALUES (2,3,'2024-10-31','Sem 3','Conference','kkkk','nnfs 2.pdf','C:\\Users\\Omkar Nikam\\Projects\\MentorMenteeTG\\Backend\\public\\uploads\\student3@gmail.com\\codoc_1727970941108_nnfs 2.pdf'),(3,2,'2024-10-31','Sem 3','Conference','kkkk','IMG_20241001_150950.jpg','C:\\Users\\Omkar Nikam\\Projects\\MentorMenteeTG\\Backend\\public\\uploads\\student2@gmail.com\\codoc_1728054596917_IMG_20241001_150950.jpg'),(4,2,'2024-10-20','Sem 4','Professional Society Workshop','kkkk','IMG_20241001_151059.jpg','C:\\Users\\Omkar Nikam\\Projects\\MentorMenteeTG\\Backend\\public\\uploads\\student2@gmail.com\\codoc_1728054597007_IMG_20241001_151059.jpg');
+/*!40000 ALTER TABLE `student_cocurricula_activity` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `student_currentdetails`
@@ -131,8 +199,18 @@ CREATE TABLE `student_currentdetails` (
   PRIMARY KEY (`c_id`),
   KEY `s_id_idx` (`s_id`),
   CONSTRAINT `fk_student_currentdetails_s_id` FOREIGN KEY (`s_id`) REFERENCES `login` (`s_id`) ON DELETE SET NULL ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `student_currentdetails`
+--
+
+LOCK TABLES `student_currentdetails` WRITE;
+/*!40000 ALTER TABLE `student_currentdetails` DISABLE KEYS */;
+INSERT INTO `student_currentdetails` VALUES (5,3,1,'Maths',23,15,16,56,25,'Pass',NULL),(6,3,1,'Matsh',23,16,15,500,20,'Pass',NULL),(7,3,2,'Math',1000,16,15,55,23,'Pass',NULL),(12,2,1,'Maths',23,15,16,56,25,'Pass',NULL),(13,2,1,'Matsh',23,16,15,500,20,'Pass',NULL),(14,2,2,'Math',1000,16,15,550000,23,'Pass',NULL),(15,2,2,'Matsh',23,16,15,5,34,'Pass',NULL);
+/*!40000 ALTER TABLE `student_currentdetails` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `student_details`
@@ -158,8 +236,18 @@ CREATE TABLE `student_details` (
   PRIMARY KEY (`st_id`),
   KEY `s_id_idx` (`s_id`),
   CONSTRAINT `fk_student_details_s_id` FOREIGN KEY (`s_id`) REFERENCES `login` (`s_id`) ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `student_details`
+--
+
+LOCK TABLES `student_details` WRITE;
+/*!40000 ALTER TABLE `student_details` DISABLE KEYS */;
+INSERT INTO `student_details` VALUES (1,1,'Aditya','2024-09-05','2024-09-21','TE','Artificial Intelligence & Data Science','student1@gmail.com','Prof. Anagha','bhandup','bhandup','9833674725','Male'),(2,2,'Suyash','2024-09-04','2024-09-20','TE','Artificial Intelligence & Data Science','student2@gmail.com','Prof. Anagha','bhandup','bhandup','9833674725','Male'),(3,6,'Sam','2024-10-24','2024-11-01','BE','Computer Science','student5@gmail.com','Prof. Anagha','Badla gaon','Badla gaon','4567234567','Female');
+/*!40000 ALTER TABLE `student_details` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `student_etc_activity`
@@ -176,11 +264,22 @@ CREATE TABLE `student_etc_activity` (
   `activity` varchar(45) DEFAULT NULL,
   `event_name` varchar(45) DEFAULT NULL,
   `event_certificate` varchar(255) DEFAULT NULL,
+  `event_certificate_path` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`etc_id`),
   KEY `s_id_idx` (`s_id`),
   CONSTRAINT `fk_student_etc_activity_s_id` FOREIGN KEY (`s_id`) REFERENCES `login` (`s_id`) ON DELETE SET NULL ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `student_etc_activity`
+--
+
+LOCK TABLES `student_etc_activity` WRITE;
+/*!40000 ALTER TABLE `student_etc_activity` DISABLE KEYS */;
+INSERT INTO `student_etc_activity` VALUES (4,3,'2024-10-13','Sem 3','Participation','kkkkk','nnfs 2.pdf','C:\\Users\\Omkar Nikam\\Projects\\MentorMenteeTG\\Backend\\public\\uploads\\student3@gmail.com\\etcdoc_1727972629824_nnfs 2.pdf'),(5,3,'2024-10-26','Sem 5','Prize','kkkkk','IMG_20241001_150950.jpg','C:\\Users\\Omkar Nikam\\Projects\\MentorMenteeTG\\Backend\\public\\uploads\\student3@gmail.com\\etcdoc_1727972629826_IMG_20241001_150950.jpg'),(6,2,'2024-10-13','Sem 3','Participation','kkkkk','IMG_20241001_151100.jpg','C:\\Users\\Omkar Nikam\\Projects\\MentorMenteeTG\\Backend\\public\\uploads\\student2@gmail.com\\etcdoc_1728054652409_IMG_20241001_151100.jpg'),(7,2,'2024-10-26','Sem 5','Prize','kkkkk','IMG_20241001_151059.jpg','C:\\Users\\Omkar Nikam\\Projects\\MentorMenteeTG\\Backend\\public\\uploads\\student2@gmail.com\\etcdoc_1728054652488_IMG_20241001_151059.jpg');
+/*!40000 ALTER TABLE `student_etc_activity` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `student_pydetails`
@@ -209,8 +308,18 @@ CREATE TABLE `student_pydetails` (
   PRIMARY KEY (`prev_id`),
   KEY `s_id_idx` (`s_id`),
   CONSTRAINT `fk_student_pydetails_s_id` FOREIGN KEY (`s_id`) REFERENCES `login` (`s_id`) ON DELETE SET NULL ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `student_pydetails`
+--
+
+LOCK TABLES `student_pydetails` WRITE;
+/*!40000 ALTER TABLE `student_pydetails` DISABLE KEYS */;
+INSERT INTO `student_pydetails` VALUES (1,3,500,450,2019,NULL,600,550,2021,NULL,200,100,2013,NULL,1,NULL),(3,2,500,450,2019,'C:\\Users\\Omkar Nikam\\Projects\\MentorMenteeTG\\Backend\\public\\uploads\\student2@gmail.com\\tenthMarksheet_1728050119210_IMG_20241001_151059.jpg',600,550,2021,'C:\\Users\\Omkar Nikam\\Projects\\MentorMenteeTG\\Backend\\public\\uploads\\student2@gmail.com\\twelfthMarksheet_1728050119254_IMG_20241001_150950.jpg',200,100,2013,'C:\\Users\\Omkar Nikam\\Projects\\MentorMenteeTG\\Backend\\public\\uploads\\student2@gmail.com\\diplomaMarksheet_1728050119279_IMG_20241001_151100.jpg',1,'C:\\Users\\Omkar Nikam\\Projects\\MentorMenteeTG\\Backend\\public\\uploads\\student2@gmail.com\\gapCertificate_1728050119316_IMG_20241001_164551.jpg');
+/*!40000 ALTER TABLE `student_pydetails` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `students_internships`
@@ -229,11 +338,22 @@ CREATE TABLE `students_internships` (
   `stipent_status` varchar(45) DEFAULT NULL,
   `stipent` int DEFAULT NULL,
   `internship_cerificate` varchar(255) DEFAULT NULL,
+  `internship_certificate_path` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`int_id`),
   KEY `s_id_idx` (`s_id`),
   CONSTRAINT `fk_students_internships_s_id` FOREIGN KEY (`s_id`) REFERENCES `login` (`s_id`) ON DELETE SET NULL ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `students_internships`
+--
+
+LOCK TABLES `students_internships` WRITE;
+/*!40000 ALTER TABLE `students_internships` DISABLE KEYS */;
+INSERT INTO `students_internships` VALUES (7,3,'Car','MAR','2024-10-12','2024-10-18','paid',500,'Voice AI Conference Paper.pdf','C:\\Users\\Omkar Nikam\\Projects\\MentorMenteeTG\\Backend\\public\\uploads\\student3@gmail.com\\internship_1727948493960_Voice AI Conference Paper.pdf'),(8,3,'Car','MAR','2024-10-04','2024-10-17','paid',5000,'BCT & BDA.pdf','C:\\Users\\Omkar Nikam\\Projects\\MentorMenteeTG\\Backend\\public\\uploads\\student3@gmail.com\\internship_1727948493987_BCT & BDA.pdf'),(18,2,'Car','MAR','2024-10-10','2024-10-09','paid',5000,'Voice AI Conference Paper.pdf','C:\\Users\\Omkar Nikam\\Projects\\MentorMenteeTG\\Backend\\public\\uploads\\student2@gmail.com\\internship_1728054311137_Voice AI Conference Paper.pdf'),(19,2,'ggg','MAR','2024-10-09','2024-10-17','unpaid',1,'ID address.pdf','C:\\Users\\Omkar Nikam\\Projects\\MentorMenteeTG\\Backend\\public\\uploads\\student2@gmail.com\\internship_1728054311144_ID address.pdf');
+/*!40000 ALTER TABLE `students_internships` ENABLE KEYS */;
+UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -244,4 +364,4 @@ CREATE TABLE `students_internships` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-10-03  1:26:44
+-- Dump completed on 2024-10-11 23:57:07

@@ -33,10 +33,10 @@ function App() {
               ) : authService.getUser() == 3 ? (
                 <HodDashboard />
               ) : (
-                <h1>Hello8</h1> // Default fallback if no matching role is found
+                <Login/>// Default fallback if no matching role is found
               )
             ) : (
-              <h1>Hello</h1>
+              <Login/>
             )
           }
         />
