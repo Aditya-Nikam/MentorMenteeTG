@@ -34,6 +34,7 @@ router.post("/carrierPath", upload.none(), careerPathController.carrierPath)
 
 // student get routes
 router.post('/getStudentDetails',upload.none(), personaldetailsController.getStudent)
+router.post('/getParentsDetails',upload.none(), personaldetailsController.getParent)
 
 
 module.exports = router;

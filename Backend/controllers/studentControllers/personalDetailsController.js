@@ -16,3 +16,12 @@ exports.getStudent =  async (req, res)=>{
       res.status(500).send({ message: error.message });
     }
 };
+
+exports.getParent  =  async (req, res)=>{
+  try {
+      const getParentdetails = await personaldetailsServices.getParentdetails(req.body.email);
+      res.json(getParentdetails);
+    } catch (error) {
+      res.status(500).send({ message: error.message });
+    }
+};

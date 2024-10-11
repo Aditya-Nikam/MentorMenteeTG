@@ -180,3 +180,46 @@ exports.getStudentdetails = (email)=>{
     );
   });
 }
+
+exports.getParentdetails = (email)=>{
+  return new Promise(async (resolve, reject) => {
+    const query = `SELECT * FROM mentor.parent_details WHERE s_id = (SELECT s_id FROM login WHERE email = ?);`;
+
+    connection.query(query,[email],async (err, user) => {
+        if (err) {
+          console.error("Error updating parent details:", err);
+          return reject(err); // Reject the promise in case of error
+        }
+        const query2 = `SELECT mentor FROM mentor.student_details WHERE s_id = (SELECT s_id FROM login WHERE email = ?);`;
+        connection.query(query2,[email],async (err, user1) => {
+          if (err) {
+            console.error("Error updating parent details:", err);
+            return reject(err); // Reject the promise in case of error
+          }
+          const {
+          father_name,
+          father_contact,
+          father_email,
+          mother_name,
+          mother_contact,
+          mother_email
+          }=user[0];
+
+          const {mentor} = user1[0];
+          const obj = {father_name,
+            father_contact,
+            father_email,
+            mother_name,
+            mother_contact,
+            mother_email,
+            mentor};
+          resolve(obj);
+        }  
+      );
+      }
+    );
+
+   
+  
+  });
+}

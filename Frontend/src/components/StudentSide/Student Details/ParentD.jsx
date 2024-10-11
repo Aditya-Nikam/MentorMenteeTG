@@ -2,8 +2,7 @@ import { useState, useEffect } from "react";
 import { FaArrowLeft } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import Navbars from "../Navbars";
-import axios from 'axios';
-
+import axios from "axios";
 
 const ParentD = () => {
   const navigate = useNavigate();
@@ -20,10 +19,52 @@ const ParentD = () => {
   const [errors, setErrors] = useState({});
 
   useEffect(() => {
-    const parentDetails = JSON.parse(localStorage.getItem("parentDetails"));
-    if (parentDetails) {
-      setFormData(parentDetails);
-    }
+
+    const fetchData = async () => {
+      const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
+
+      if (loggedInUser && loggedInUser.email) {
+        setFormData((prevData) => ({ ...prevData, email: loggedInUser.email }));
+
+        const formDataObj = new FormData();
+        formDataObj.append("email", loggedInUser.email);
+
+        try {
+          const response = await axios.post(
+            "http://localhost:3001/getParentsDetails",
+            formDataObj,
+            {
+              headers: {
+                "Content-Type": "multipart/form-data",
+              },
+            }
+          );
+          const {
+            father_name,
+            father_contact,
+            father_email,
+            mother_name,
+            mother_contact,
+            mother_email,
+            mentor
+          } = response.data;
+
+          setFormData({
+            fatherName: father_name,
+            fatherMobile: father_contact,
+            fatherEmail: father_email,
+            motherName: mother_name,
+            motherMobile: mother_contact,
+            motherEmail: mother_email,
+            mentorName: mentor,
+          });
+        } catch (error) {
+          console.error("Error fetching student details:", error);
+        }
+      }
+    };
+
+    fetchData(); // Call the async function
   }, []);
 
   const handleChange = (e) => {
@@ -38,8 +79,10 @@ const ParentD = () => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Basic email regex
     const nameRegex = /^[A-Za-z\s]+$/; // Name regex to allow only letters and spaces
 
-    if (!formData.fatherName) newErrors.fatherName = "Father's Name is required.";
-    else if (!nameRegex.test(formData.fatherName)) newErrors.fatherName = "Father's Name must contain only letters.";
+    if (!formData.fatherName)
+      newErrors.fatherName = "Father's Name is required.";
+    else if (!nameRegex.test(formData.fatherName))
+      newErrors.fatherName = "Father's Name must contain only letters.";
 
     if (!formData.fatherMobile) {
       newErrors.fatherMobile = "Father's Mobile Number is required.";
@@ -52,8 +95,10 @@ const ParentD = () => {
       newErrors.fatherEmail = "Invalid email format.";
     }
 
-    if (!formData.motherName) newErrors.motherName = "Mother's Name is required.";
-    else if (!nameRegex.test(formData.motherName)) newErrors.motherName = "Mother's Name must contain only letters.";
+    if (!formData.motherName)
+      newErrors.motherName = "Mother's Name is required.";
+    else if (!nameRegex.test(formData.motherName))
+      newErrors.motherName = "Mother's Name must contain only letters.";
 
     if (!formData.motherMobile) {
       newErrors.motherMobile = "Mother's Mobile Number is required.";
@@ -66,16 +111,16 @@ const ParentD = () => {
       newErrors.motherEmail = "Invalid email format.";
     }
 
-    if (!formData.mentorName) newErrors.mentorName = "Mentor's Name is required.";
-  
+    if (!formData.mentorName)
+      newErrors.mentorName = "Mentor's Name is required.";
 
     return newErrors;
   };
 
-  const handleSubmit = async(e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const validationErrors = validate();
-    
+
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
       return; // Prevent submission if there are validation errors
@@ -83,23 +128,28 @@ const ParentD = () => {
 
     // Save form data to local storage
     localStorage.setItem("parentDetails", JSON.stringify(formData));
-    
+
     // Display alert message
     alert("Details successfully submitted!");
-    
+
     // Log form data to console
     console.log("Form data submitted:", formData);
 
-
     const formDataObj = new FormData();
-    formDataObj.append("email",JSON.parse(localStorage.getItem("loggedInUser")));
-    formDataObj.append("studentDetails",localStorage.getItem("studentDetails"));
-    formDataObj.append("parentDetails",localStorage.getItem("parentDetails"));
+    formDataObj.append(
+      "email",
+      JSON.parse(localStorage.getItem("loggedInUser"))
+    );
+    formDataObj.append(
+      "studentDetails",
+      localStorage.getItem("studentDetails")
+    );
+    formDataObj.append("parentDetails", localStorage.getItem("parentDetails"));
 
     try {
-      await axios.post('http://localhost:3001/personaldetails', formDataObj, {
+      await axios.post("http://localhost:3001/personaldetails", formDataObj, {
         headers: {
-          'Content-Type': 'multipart/form-data',
+          "Content-Type": "multipart/form-data",
         },
       });
       // alert('Files successfully uploaded!');
@@ -107,10 +157,7 @@ const ParentD = () => {
       console.error(error);
     }
     navigate("/pydetails");
-  }
-
-
-
+  };
 
   return (
     <div className="min-h-screen bg-gray-100">
@@ -118,7 +165,9 @@ const ParentD = () => {
       <div className="flex flex-col min-h-screen bg-gray-100">
         <div className="flex-grow flex items-center justify-center p-20">
           <div className="bg-white border p-10 shadow-2xl w-full max-w-4xl relative">
-            <h1 className="text-2xl font-bold text-black text-left mb-6">Parents Details</h1>
+            <h1 className="text-2xl font-bold text-black text-left mb-6">
+              Parents Details
+            </h1>
             {/* Arrow */}
             <div className="absolute top-4 left-10">
               <Link to="/StudentD">
@@ -129,7 +178,10 @@ const ParentD = () => {
               {/* Parent's Details */}
               <div className="grid grid-cols-3 gap-4 mb-6">
                 <div>
-                  <label htmlFor="fatherName" className="block text-sm font-medium text-gray-700">
+                  <label
+                    htmlFor="fatherName"
+                    className="block text-sm font-medium text-gray-700"
+                  >
                     Father's Name
                   </label>
                   <input
@@ -141,10 +193,15 @@ const ParentD = () => {
                     required
                     className="mt-1 block w-full px-3 py-2 border border-gray-600 rounded-md shadow-sm sm:text-sm"
                   />
-                  {errors.fatherName && <p className="text-red-500 text-xs">{errors.fatherName}</p>}
+                  {errors.fatherName && (
+                    <p className="text-red-500 text-xs">{errors.fatherName}</p>
+                  )}
                 </div>
                 <div>
-                  <label htmlFor="fatherMobile" className="block text-sm font-medium text-gray-700">
+                  <label
+                    htmlFor="fatherMobile"
+                    className="block text-sm font-medium text-gray-700"
+                  >
                     Father's Mobile Number
                   </label>
                   <input
@@ -156,10 +213,17 @@ const ParentD = () => {
                     required
                     className="mt-1 block w-full px-3 py-2 border border-gray-600 rounded-md shadow-sm sm:text-sm"
                   />
-                  {errors.fatherMobile && <p className="text-red-500 text-xs">{errors.fatherMobile}</p>}
+                  {errors.fatherMobile && (
+                    <p className="text-red-500 text-xs">
+                      {errors.fatherMobile}
+                    </p>
+                  )}
                 </div>
                 <div>
-                  <label htmlFor="fatherEmail" className="block text-sm font-medium text-gray-700">
+                  <label
+                    htmlFor="fatherEmail"
+                    className="block text-sm font-medium text-gray-700"
+                  >
                     Father's Email ID
                   </label>
                   <input
@@ -171,13 +235,18 @@ const ParentD = () => {
                     required
                     className="mt-1 block w-full px-3 py-2 border border-gray-600 rounded-md shadow-sm sm:text-sm"
                   />
-                  {errors.fatherEmail && <p className="text-red-500 text-xs">{errors.fatherEmail}</p>}
+                  {errors.fatherEmail && (
+                    <p className="text-red-500 text-xs">{errors.fatherEmail}</p>
+                  )}
                 </div>
               </div>
 
               <div className="grid grid-cols-3 gap-4 mb-6">
                 <div>
-                  <label htmlFor="motherName" className="block text-sm font-medium text-gray-700">
+                  <label
+                    htmlFor="motherName"
+                    className="block text-sm font-medium text-gray-700"
+                  >
                     Mother's Name
                   </label>
                   <input
@@ -189,10 +258,15 @@ const ParentD = () => {
                     required
                     className="mt-1 block w-full px-3 py-2 border border-gray-600 rounded-md shadow-sm sm:text-sm"
                   />
-                  {errors.motherName && <p className="text-red-500 text-xs">{errors.motherName}</p>}
+                  {errors.motherName && (
+                    <p className="text-red-500 text-xs">{errors.motherName}</p>
+                  )}
                 </div>
                 <div>
-                  <label htmlFor="motherMobile" className="block text-sm font-medium text-gray-700">
+                  <label
+                    htmlFor="motherMobile"
+                    className="block text-sm font-medium text-gray-700"
+                  >
                     Mother's Mobile Number
                   </label>
                   <input
@@ -204,10 +278,17 @@ const ParentD = () => {
                     required
                     className="mt-1 block w-full px-3 py-2 border border-gray-600 rounded-md shadow-sm sm:text-sm"
                   />
-                  {errors.motherMobile && <p className="text-red-500 text-xs">{errors.motherMobile}</p>}
+                  {errors.motherMobile && (
+                    <p className="text-red-500 text-xs">
+                      {errors.motherMobile}
+                    </p>
+                  )}
                 </div>
                 <div>
-                  <label htmlFor="motherEmail" className="block text-sm font-medium text-gray-700">
+                  <label
+                    htmlFor="motherEmail"
+                    className="block text-sm font-medium text-gray-700"
+                  >
                     Mother's Email ID
                   </label>
                   <input
@@ -219,16 +300,23 @@ const ParentD = () => {
                     required
                     className="mt-1 block w-full px-3 py-2 border border-gray-600 rounded-md shadow-sm sm:text-sm"
                   />
-                  {errors.motherEmail && <p className="text-red-500 text-xs">{errors.motherEmail}</p>}
+                  {errors.motherEmail && (
+                    <p className="text-red-500 text-xs">{errors.motherEmail}</p>
+                  )}
                 </div>
               </div>
 
               {/* Mentor Details */}
               <hr className="my-6 border-gray-800" />
-              <h2 className="text-2xl font-bold text-black text-left mb-4">Mentor Details</h2>
+              <h2 className="text-2xl font-bold text-black text-left mb-4">
+                Mentor Details
+              </h2>
               <div className="grid grid-cols-1 gap-4 mb-6">
                 <div>
-                  <label htmlFor="mentorName" className="block text-sm font-medium text-gray-700">
+                  <label
+                    htmlFor="mentorName"
+                    className="block text-sm font-medium text-gray-700"
+                  >
                     Mentor's Name
                   </label>
                   <input
@@ -240,7 +328,9 @@ const ParentD = () => {
                     required
                     className="mt-1 block w-full px-3 py-2 border border-gray-600 rounded-md shadow-sm sm:text-sm"
                   />
-                  {errors.mentorName && <p className="text-red-500 text-xs">{errors.mentorName}</p>}
+                  {errors.mentorName && (
+                    <p className="text-red-500 text-xs">{errors.mentorName}</p>
+                  )}
                 </div>
               </div>
 
@@ -259,6 +349,5 @@ const ParentD = () => {
       </div>
     </div>
   );
-
 };
 export default ParentD;
