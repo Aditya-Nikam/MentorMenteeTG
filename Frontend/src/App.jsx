@@ -12,6 +12,11 @@ import CurrentD from "./components/StudentSide/Student Details/CurrentD";
 import Cocurriact from "./components/StudentSide/Student Details/Cocurriact";
 import Extracurriact from "./components/StudentSide/Student Details/Extracurriact";
 import CareerPath from "./components/StudentSide/Student Details/CareerPath";
+import HodDashboard from "./components/HodSide/HodDashboard";
+import MentorDashboard from "./components/MentorSide/MentorDashboard";
+import StudentsListHod from "./components/HodSide/StudentListHod";
+import HODAnnouncementPage from "./components/HodSide/HODAnnouncementpage";
+
 function App() {
   return (
     <Router>
@@ -19,8 +24,23 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route
           path="/"
-          element={authService.getCurrentUser() ? <Sdashboard /> : <Login />}
+          element={
+            authService.getCurrentUser() ? (
+              authService.getUser() == 1 ? (
+                <Sdashboard />
+              ) : authService.getUser() == 2 ? (
+                <MentorDashboard />
+              ) : authService.getUser() == 3 ? (
+                <HodDashboard />
+              ) : (
+                <h1>Hello8</h1> // Default fallback if no matching role is found
+              )
+            ) : (
+              <h1>Hello</h1>
+            )
+          }
         />
+
         <Route path="/registration" element={<RegistrationPage />} />
         <Route
           path="/sdashboard"
@@ -57,6 +77,18 @@ function App() {
         <Route
           path="/careerpath"
           element={authService.getCurrentUser() ? <CareerPath /> : <Login />}
+        />
+        <Route
+          path="/studentlisthod"
+          element={
+            authService.getCurrentUser() ? <StudentsListHod /> : <Login />
+          }
+        />
+        <Route
+          path="/news"
+          element={
+            authService.getCurrentUser() ? <HODAnnouncementPage /> : <Login />
+          }
         />
       </Routes>
     </Router>
