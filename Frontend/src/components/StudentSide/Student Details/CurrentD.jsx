@@ -56,7 +56,8 @@ const CurrentD = () => {
           
             return acc; // Return the updated accumulator
           }, {});
-          
+          console.log(groupedBySemester)
+          console.log(response.data)
           setSemesterSubjects(groupedBySemester);
         } catch (error) {
           console.error("Error fetching student details:", error);

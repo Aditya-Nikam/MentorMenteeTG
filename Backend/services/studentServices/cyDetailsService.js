@@ -48,7 +48,7 @@ exports.cydetails = (body) => {
 
 // Function to handle insertion logic
 const insertStudentCurrentDetails = (s_id, semesterSubjects, resolve, reject) => {
-    const insertStudentCurrentDetailsQuery = `INSERT INTO mentor.student_currentdetails (s_id, semester, subject, oral_marks, ia_1marks, ia_2_marks, university_marks, term_work_marks, pass_fail) VALUES `;
+    const insertStudentCurrentDetailsQuery = `INSERT INTO mentor.student_currentdetails (s_id, semester, subject, oral_marks, ia1_marks, ia2_marks, university_marks, term_work_marks, pass_fail) VALUES `;
 
     // Initialize an array to hold all the value sets
     const valueSets = [];
@@ -103,8 +103,8 @@ exports.getCyDetails = (email)=>{
                     semester:element.semester,
                     subjectName:element.subject,
                     oralMarks:element.oral_marks,
-                    ia1Marks:element.ia_1marks,
-                    ia2Marks:element.ia_2marks,
+                    ia1Marks:element.ia1_marks,
+                    ia2Marks:element.ia2_marks,
                     universityMarks:element.university_marks,
                     twMarks:element.term_work_marks,
                     passFail:element.pass_fail
