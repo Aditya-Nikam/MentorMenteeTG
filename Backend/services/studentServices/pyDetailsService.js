@@ -97,7 +97,7 @@ exports.pydetails = (body, files) => {
                         }
 
                         // Update existing student details
-                        const updateStudentPYDetailsQuery = `UPDATE mentor.student_pydetails SET tenth_marks = ?, tenth_percent = ?, tenth_passing_year = ?, tenth_marksheet = ?, twelth_marks = ?, twelth_percent = ?, twelth_passing_year = ?, twelth_marksheet = ?, diploma_marks = ?, diploma_percent = ?, diploma_passing_year = ?, diploma_marksheet = ?, has_gap = ?, gap_certificate = ? WHERE s_id = ?;`;
+                        const updateStudentPYDetailsQuery = `UPDATE mentor.student_pydetails SET tenth_marks = ?, tenth_percent = ?, tenth_passing_year = ?, tenth_marksheet = COALESCE(?, tenth_marksheet), twelth_marks = ?, twelth_percent = ?, twelth_passing_year = ?, twelth_marksheet = COALESCE(?, twelth_marksheet), diploma_marks = ?, diploma_percent = ?, diploma_passing_year = ?, diploma_marksheet = COALESCE(?, diploma_marksheet), has_gap = ?, gap_certificate = COALESCE(?, gap_certificate) WHERE s_id = ?;`;
 
                         connection.query(updateStudentPYDetailsQuery,
                             [tenthMarks, tenthPercentage, tenthPassingYear, tenthMarksheet,
@@ -138,3 +138,50 @@ exports.pydetails = (body, files) => {
         });
     });
 };
+
+exports.getPyDetails = (email)=>{
+    return new Promise(async (resolve, reject) => {
+        const query = `SELECT * FROM mentor.student_pydetails WHERE s_id = (SELECT s_id FROM login WHERE email = ?);`;
+    
+        connection.query(query,[email],async (err, user) => {
+            if (err) {
+              console.error("Error updating parent details:", err);
+              return reject(err); // Reject the promise in case of error
+            }
+            const {
+                tenth_marks,
+                tenth_percent,
+                tenth_passing_year,
+                tenth_marksheet,
+                twelth_marks,
+                twelth_percent,
+                twelth_passing_year,
+                twelth_marksheet,
+                diploma_marks,
+                diploma_percent,
+                diploma_passing_year,
+                diploma_marksheet,
+                has_gap,
+                gap_certificate
+              }=user[0];
+              const obj = {
+                tenth_marks,
+                tenth_percent,
+                tenth_passing_year,
+                tenth_marksheet,
+                twelth_marks,
+                twelth_percent,
+                twelth_passing_year,
+                twelth_marksheet,
+                diploma_marks,
+                diploma_percent,
+                diploma_passing_year,
+                diploma_marksheet,
+                has_gap,
+                gap_certificate
+              }
+
+            resolve(obj);
+        });   
+      });
+}   

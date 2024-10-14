@@ -38,6 +38,7 @@ router.post("/carrierPath", upload.none(), careerPathController.carrierPath)
 router.post('/getStudentDetails',upload.none(), personaldetailsController.getStudent)
 router.post('/getParentsDetails',upload.none(), personaldetailsController.getParent)
 router.get('/allStudents',studentController.allStudents);
+router.post('/getStudentpyDetails',upload.none(), prevYearController.getPyDetails)
 
 // mentor routes
 router.get('/allMentors',mentorController.allMentors);

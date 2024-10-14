@@ -7,3 +7,11 @@ exports.pydetails = async (req, res)=>{
         res.status(500).send({ message: error.message });
       }
 };
+exports.getPyDetails =  async (req, res)=>{
+  try {
+      const pyDetailsService = await pyDetailsServices.getPyDetails(req.body.email);
+      res.json(pyDetailsService);
+    } catch (error) {
+      res.status(500).send({ message: error.message });
+    }
+};
