@@ -22,10 +22,49 @@ const CurrentD = () => {
   const [errors, setErrors] = useState({});
 
   useEffect(() => {
-    const semesterSubjects = JSON.parse(localStorage.getItem("semesterSubjects"));
-    if (semesterSubjects) {
-      setSemesterSubjects(semesterSubjects);
-    }
+    const fetchData = async () => {
+      const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
+
+      if (loggedInUser && loggedInUser.email) {
+        setFormData((prevData) => ({ ...prevData, email: loggedInUser.email }));
+
+        const formDataObj = new FormData();
+        formDataObj.append("email", loggedInUser.email);
+
+        try {
+          const response = await axios.post(
+            "http://localhost:3001/getStudentcyDetails",
+            formDataObj,
+            {
+              headers: {
+                "Content-Type": "multipart/form-data",
+              },
+            }
+          );
+
+
+          const groupedBySemester = response.data.reduce((acc, subject) => {
+            const semester = subject.semester; // Get the semester number from the current subject
+          
+            // If the semester key doesn't exist in the accumulator, create it and set it to an empty array
+            if (!acc[semester]) {
+              acc[semester] = [];
+            }
+          
+            // Add the current subject to the corresponding semester array
+            acc[semester].push(subject);
+          
+            return acc; // Return the updated accumulator
+          }, {});
+          
+          setSemesterSubjects(groupedBySemester);
+        } catch (error) {
+          console.error("Error fetching student details:", error);
+        }
+      }
+    };
+
+    fetchData();
   }, []);
 
   const handleChange = (e) => {
@@ -101,8 +140,6 @@ const CurrentD = () => {
 
   const handleSubmit = async () => {
     alert("Form submitted!");
-
-    localStorage.setItem("semesterSubjects", JSON.stringify(semesterSubjects));
     const formDataObj = new FormData();
     formDataObj.append("email",JSON.parse(localStorage.getItem("loggedInUser")).email);
     formDataObj.append("semesterSubjects",JSON.stringify(semesterSubjects));

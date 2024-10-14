@@ -156,6 +156,8 @@ const ParentD = () => {
     } catch (error) {
       console.error(error);
     }
+    localStorage.removeItem("studentDetails");
+    localStorage.removeItem("parentDetails");
     navigate("/pydetails");
   };
 

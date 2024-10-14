@@ -88,3 +88,30 @@ const insertStudentCurrentDetails = (s_id, semesterSubjects, resolve, reject) =>
         resolve({ message: "Student current details inserted successfully: " + result });
     });
 };
+exports.getCyDetails = (email)=>{
+    return new Promise(async (resolve, reject) => {
+        const query = `SELECT * FROM mentor.student_currentdetails WHERE s_id = (SELECT s_id FROM login WHERE email = ?);`;
+    
+        connection.query(query,[email],async (err, records) => {
+            if (err) {
+              console.error("Error updating parent details:", err);
+              return reject(err); // Reject the promise in case of error
+            }
+            let data = [];
+            records.forEach(element => {
+                let obj = {
+                    semester:element.semester,
+                    subjectName:element.subject,
+                    oralMarks:element.oral_marks,
+                    ia1Marks:element.ia_1marks,
+                    ia2Marks:element.ia_2marks,
+                    universityMarks:element.university_marks,
+                    twMarks:element.term_work_marks,
+                    passFail:element.pass_fail
+                }
+                data.push(obj);
+            });
+            resolve(data);
+        });   
+      });
+}   

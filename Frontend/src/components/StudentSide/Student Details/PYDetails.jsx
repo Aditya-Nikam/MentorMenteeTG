@@ -25,12 +25,6 @@ const PYDetails = () => {
   });
 
   const [errors, setErrors] = useState({}); // State for validation errors
-  // useEffect(() => {
-  //   const pydetails = JSON.parse(localStorage.getItem("pydetails"));
-  //   if (pydetails) {
-  //     setFormData(pydetails);
-  //   }
-  // }, []);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -156,7 +150,6 @@ const PYDetails = () => {
       console.error("Error uploading files:", error);
       alert("Failed to upload files.");
     }
-    localStorage.setItem("pydetails", JSON.stringify(formData));
     navigate("/currentd");
   };
   const handleViewDocument = (documentPath) => {

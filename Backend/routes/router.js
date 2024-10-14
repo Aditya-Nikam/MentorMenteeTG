@@ -28,17 +28,18 @@ router.post('/register', registrationController.register);
 router.post('/personaldetails', upload.none(), personaldetailsController.personaldetails);
 router.post("/pydetails", uploads, prevYearController.pydetails);
 router.post("/cydetails", upload.none(), currentYearController.cydetails);
-router.post("/internships", upload.array("internship"), internshipController.internshipDetails)
-router.post("/cocurriact", upload.array("codoc"),cocurrActController.cocurrActivity)
-router.post("/etccurriact", upload.array("etcdoc"), etcActController.etcActivity)
-router.post("/carrierPath", upload.none(), careerPathController.carrierPath)
+router.post("/internships", upload.array("internship"), internshipController.internshipDetails);
+router.post("/cocurriact", upload.array("codoc"),cocurrActController.cocurrActivity);
+router.post("/etccurriact", upload.array("etcdoc"), etcActController.etcActivity);
+router.post("/carrierPath", upload.none(), careerPathController.carrierPath);
 
 
 // student get routes
-router.post('/getStudentDetails',upload.none(), personaldetailsController.getStudent)
-router.post('/getParentsDetails',upload.none(), personaldetailsController.getParent)
+router.post('/getStudentDetails',upload.none(), personaldetailsController.getStudent);
+router.post('/getParentsDetails',upload.none(), personaldetailsController.getParent);
 router.get('/allStudents',studentController.allStudents);
-router.post('/getStudentpyDetails',upload.none(), prevYearController.getPyDetails)
+router.post('/getStudentpyDetails',upload.none(), prevYearController.getPyDetails);
+router.post('/getStudentcyDetails',upload.none(), currentYearController.getcyDetails);
 
 // mentor routes
 router.get('/allMentors',mentorController.allMentors);
